@@ -83,7 +83,13 @@ if( !empty( $_REQUEST['viewraw']) ){
 
 <link rel="stylesheet" type="text/css" href="http://extjs.cachefly.net/ext-2.2/resources/css/ext-all.css" />
 <link rel="stylesheet" type="text/css" href="../resources/uploader.css" />
-
+<style tyle='text/css'>
+body{
+	font-size:12px;
+	font-family: Tahoma;
+	padding: 10px;
+}
+</style>
 <script type="text/javascript" src="http://code.google.com/apis/gears/gears_init.js" ></script>
 <script type="text/javascript" src="http://extjs.cachefly.net/ext-2.2/adapter/ext/ext-base.js"> </script>
 <script type="text/javascript" src="http://extjs.cachefly.net/ext-2.2/ext-all.js"> </script>
