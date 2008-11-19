@@ -1,1 +1,3 @@
+<IfModule mod_security>
 SecFilterEngine Off
+</IfModule>
