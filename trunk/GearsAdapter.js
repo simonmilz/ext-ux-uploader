@@ -75,6 +75,9 @@ Ext.ux.uploader.GearsAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
 		var errors = [];
 		for(var i = 0; i < files.length; i++){
 			var sig = this._getFileSignature(files[i]);
+			if( this._queue.containsKey(sig) ){
+				continue;
+			}
 			if( this._maxSize && files[i].blob.length > this._maxSize ){
 				var size = Math.round(this._maxSize / 1000 )+'KB';
 				errors[errors.length] = {
@@ -90,14 +93,12 @@ Ext.ux.uploader.GearsAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
 				};
 				continue;
 			}
-			if(!this._queue.containsKey(sig)){
-				this._queue.add(sig,{
-					id			:sig,
-					data		:files[i],
-					uploaded	:0
-				});
-				this.fireEvent('filequeued', this._queue.get(sig));
-			}
+			this._queue.add(sig,{
+				id			:sig,
+				data		:files[i],
+				uploaded	:0
+			});
+			this.fireEvent('filequeued', this._queue.get(sig));
 		}
 		if( errors.length > 0 ){
 			this.fireEvent('queueerror', errors);
