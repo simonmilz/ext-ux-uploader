@@ -10,10 +10,8 @@ Ext.ux.uploader.AbstractAdapter = function(config){
 		'uploadcomplete'		:true,
 		'uploaderror'			:true,
 		'uploadprogress'		:true,
-		
-		/* queue events */
+		'queueerror'			:true,
 		'filequeued'			:true,
-		'filequeueerror'		:true,
 		'queuecomplete'			:true
 	});
 	
@@ -21,6 +19,11 @@ Ext.ux.uploader.AbstractAdapter = function(config){
 };
 
 Ext.extend(Ext.ux.uploader.AbstractAdapter, Ext.util.Observable,{
+	
+	lang : {
+		INVALID_FILETYPE		:'Invalid File Type',
+		EXCEEDS_MAXSIZE			:'File exceeds maximum size of {0}'
+	},
 	
 	_validFileName : function(filename){
 		// check extensions etc..

@@ -68,7 +68,7 @@ if( !empty( $_REQUEST['viewraw']) ){
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html> 
 <head> 
-<title>Hello World for the File System API</title>
+<title>Ext.ux.Uploader Samples</title>
 <style type="text/css">
 .progress{
 	width: 200px;
@@ -82,15 +82,15 @@ if( !empty( $_REQUEST['viewraw']) ){
 </style>
 
 <link rel="stylesheet" type="text/css" href="http://extjs.cachefly.net/ext-2.2/resources/css/ext-all.css" />
-<link rel="stylesheet" type="text/css" href="../ux-uploader/uploader.css" />
+<link rel="stylesheet" type="text/css" href="../resources/uploader.css" />
 
 <script type="text/javascript" src="http://code.google.com/apis/gears/gears_init.js" ></script>
 <script type="text/javascript" src="http://extjs.cachefly.net/ext-2.2/adapter/ext/ext-base.js"> </script>
 <script type="text/javascript" src="http://extjs.cachefly.net/ext-2.2/ext-all.js"> </script>
-<script type='text/javascript' src='../ux-uploader/AbstractAdapter.js'></script>
-<script type='text/javascript' src='../ux-uploader/GearsAdapter.js'></script>
-<script type='text/javascript' src='../ux-uploader/HtmlAdapter.js'></script>
-<script type='text/javascript' src='../ux-uploader/UploadPanel.js'></script>
+<script type='text/javascript' src='../AbstractAdapter.js'></script>
+<script type='text/javascript' src='../GearsAdapter.js'></script>
+<script type='text/javascript' src='../HtmlAdapter.js'></script>
+<script type='text/javascript' src='../UploadPanel.js'></script>
 
 <!--[if IE]>
 <script type='text/javascript' 
@@ -98,62 +98,19 @@ if( !empty( $_REQUEST['viewraw']) ){
 <![endif]-->
 
 <script type="text/javascript">
+<?php include dirname(__FILE__).'/sample.js'; ?>
 
-var loaded=false;
 Ext.onReady(function(){
-	if(loaded) return;
-	loaded=true;
-	
-	if (!window.google || !google.gears) {
-		
-		Ext.MessageBox.confirm(
-			"Gears Dialog",
-			"This website has additional functionality that you are missing out "+
-			"on. Would you like to take a minute to install Google Gears and "+
-			"experience enhanced uploads?",
-			function(btn){
-				if(btn=='ok'||btn=='yes'){
-					var message = "Gears will allow you upload multiple images with ease!";
-					location.href = [
-						"http://gears.google.com/?action=install",
-						"&message="+encodeURIComponent(message),
-						"&return="+location.href
-					].join('');
-				}
-			}
-		);
-		
-	}
-	else{
-		var panel = new Ext.ux.uploader.Panel({
-			adapter 		:'gears',
-			extraParams		:{adapter:'gears'},
-			width			:300,
-			height			:200,
-			title			:'Gears Panel',
-			renderTo		:"gears-panel",
-			autoScroll		:true,
-			filters			:['.jpg','.png','.gif']
-		});
-	}
-	var panel2 = new Ext.ux.uploader.Panel({
-		adapter 		:'html',
-		extraParams		:{adapter:'html'},
-		width			:300,
-		height			:200,
-		maxRequests		:10,
-		title			:'Html Panel',
-		renderTo		:"html-panel",
-		autoScroll		:true,
-		filters			:['.jpg','.gif','.png']
+	var on=false;
+	Ext.fly('sourceToggle').on('click', function(){
+		Ext.fly('source').setStyle({'display':on?'none':''});
+		on=!on;
 	});
-	
 });
 </script>
-
-
 </head>
-<body style='font-family:verdana;'>
+<body>
+
 <div style="padding: 10px;" >
 	<div style="float:left;margin: 10px;">
 		<div id="gears-panel"></div>
@@ -161,6 +118,13 @@ Ext.onReady(function(){
 	<div style="float:left;margin: 10px;">
 		<div id="html-panel"></div>
 	</div>
+</div>
+<div style='clear:both;'>
+<a href='#source' id='sourceToggle'>Show/Hide Source</a>
+<div style='display: none; height: 300px; overflow: auto; margin: 10px; border: 1px solid #ccc; padding: 10px;' id='source'>
+<pre style='font-size: 12px;'>
+<?php include dirname(__FILE__).'/sample.js'; ?>
+</pre>
 </div>
 </body> 
 </html> 

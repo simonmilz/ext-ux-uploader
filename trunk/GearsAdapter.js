@@ -66,14 +66,22 @@ Ext.ux.uploader.GearsAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
 	},
 	
 	_onFilesQueued : function( files ){
+		var errors = [];
 		for(var i = 0; i < files.length; i++){
 			var sig = this._getFileSignature(files[i]);
 			if( this._maxSize && files[i].blob.length > this._maxSize ){
-				this.fireEvent('queueerror', files[i]);
+				var size = Math.round(this._maxSize / 1000 )+'KB';
+				errors[errors.length] = {
+					message :String.format(this.lang.EXCEEDS_MAXSIZE, size),
+					name	:files[i].name
+				};
 				continue;
 			}
 			if( !this._validFileName( files[i].name) ){
-				this.fireEvent('queueerror', files[i]);
+				errors[errors.length] = {
+					message	:this.lang.INVALID_FILETYPE,
+					name	:files[i].name
+				};
 				continue;
 			}
 			if(!this._queue.containsKey(sig)){
@@ -84,6 +92,9 @@ Ext.ux.uploader.GearsAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
 				});
 				this.fireEvent('filequeued', this._queue.get(sig));
 			}
+		}
+		if( errors.length > 0 ){
+			this.fireEvent('queueerror', errors);
 		}
 	},
 	
@@ -266,7 +277,10 @@ Ext.ux.uploader.GearsAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
 	},
 	
 	browse : function(){
-		this._gearsDesktop.openFiles(this._onFilesQueued.createDelegate(this),this._gearsOpenFilesOptions);
+		this._gearsDesktop.openFiles(
+			this._onFilesQueued.createDelegate(this),
+			this._gearsOpenFilesOptions
+		);
 	},
 	
 	removeAt : function(index){

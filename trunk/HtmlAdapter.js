@@ -114,7 +114,11 @@ Ext.ux.uploader.HtmlAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
 			return;
 		}
 		if( !this._validFileName(value) ){
-			this.fireEvent('filequeueerror',{name:'value'});
+			this._activeInput.dom.value='';
+			this.fireEvent('queueerror',[{
+				name	:value,
+				message	:this.lang.INVALID_FILETYPE
+			}]);
 			return;
 		}
 		// create a form for this bad boy...
