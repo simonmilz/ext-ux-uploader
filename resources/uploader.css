@@ -85,3 +85,8 @@
 .upload-icon{
 	background-image: url(page_white_get.png) !important;
 }
+.error-icon{
+	background: transparent url(exclamation.png) no-repeat scroll 3px 3px;
+	padding-left:25px !important;
+	color: red;
+}

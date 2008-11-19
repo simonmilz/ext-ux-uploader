@@ -27,24 +27,25 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 		if( !this._adapter ){
 			throw "Uploader Adapter could not be found: "+this._adapterType;
 		}
-		
-		this.tbar = [this._addFilesBtn, '-', {
+		this._uploadBtn = new Ext.Button({
 			text 			:'Upload',
 			handler			:this._adapter.upload,
 			scope			:this._adapter,
 			cls				:'x-btn-text-icon',
-			iconCls			:'upload-icon'
-		}];
+			iconCls			:'upload-icon',
+			disabled		:true
+		});
+		this.tbar = [this._addFilesBtn, '-', this._uploadBtn];
 		
 		this._statusBar = new Ext.StatusBar({
-			defaultText : 'Waiting.',
+			defaultText : '',
 			busyText : 'Uploading...'/*,
 			items : ['->',{
 				text : 'info'
 			}]
 			*/
 		});
-		this.bbar = this._statusBar
+		this.bbar = this._statusBar;
 		
 		this.relayEvents(this._adapter,[
 			'filequeued',
@@ -68,6 +69,7 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 		}
 		
 		this._adapter.on('filequeued', this._onFileQueued, this);
+		this._adapter.on('queueerror', this._onQueueError, this);
 		this._adapter.on('uploadcomplete', this._onUploadComplete, this);
 		this._adapter.on('uploadstart', this._onUploadStart, this);
 		this._adapter.on('uploadprogress', this._onUploadProgress, this);
@@ -81,7 +83,27 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 		// create an entry in the queue
 		var el = this.entryTpl.append(this.body,{name:name});
 		this._queue.add(file.id,el);
+		this._uploadBtn.enable();
 		this.doLayout();
+	},
+	
+	
+	_onQueueError : function(errors){
+		var text = '';
+		if(errors.length > 1){
+			// multiple files.
+			text = 'Error adding some of the selected files';
+		}else{
+			text = errors[0].name+': '+errors[0].message;
+		}
+		this._statusBar.setStatus({
+			text		:text,
+			iconCls		:'error-icon',
+			clear		:{
+				wait		:3000,
+				anim		:true
+			}
+		});
 	},
 	
 	_onUploadStart : function(file){
@@ -95,6 +117,7 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 	_onUploadComplete : function(file){
 		this._statusBar.clearStatus({useDefaults:true});
 		var el = this._queue.removeKey(file.id);
+		this._uploadBtn.disable();
 		Ext.fly(el).remove();
 	},
 	
