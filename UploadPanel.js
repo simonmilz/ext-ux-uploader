@@ -81,12 +81,22 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 	_onFileQueued : function(file){
 		var name = file.data.name;
 		// create an entry in the queue
-		var el = this.entryTpl.append(this.body,{name:name});
+		var el = Ext.get(this.entryTpl.append(this.body,{name:name}));
+		this._initEntry(file,el);
 		this._queue.add(file.id,el);
 		this._uploadBtn.enable();
 		this.doLayout();
 	},
 	
+	_initEntry : function(el,file){
+		el.buttons 	= el.child('.x-upload-panel-entry-buttons');
+		el.progress = el.child('.x-upload-panel-entry-progress');
+		el.title 	= el.child('.x-upload-panel-entry-title');
+		el.icon		= el.child('.x-upload-panel-entry-icon');
+		if( this._adapter.hasFeature('filesize') ){
+			// file.
+		}
+	},
 	
 	_onQueueError : function(errors){
 		var text = '';
@@ -108,7 +118,7 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 	
 	_onUploadStart : function(file){
 		var el = this._queue.get(file.id);
-		var icon = Ext.fly(el).child('.x-upload-panel-entry-icon');
+		var icon = el.child('.x-upload-panel-entry-icon');
 		icon.removeClass('page-icon');
 		icon.addClass('loading-icon');
 		this._statusBar.showBusy();

@@ -30,7 +30,7 @@ Ext.onReady(function(){
 			title			:'Gears Panel',
 			renderTo		:"gears-panel",
 			autoScroll		:true,
-			maxSize			:4096000,
+			fullUpload		:true,
 			filters			:['.jpg','.png','.gif']
 		});
 	}
