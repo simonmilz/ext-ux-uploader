@@ -15,6 +15,15 @@ Ext.ux.uploader.AbstractAdapter = function(config){
 		'queuecomplete'			:true
 	});
 	
+	this._features = {
+		/* These are the features for the basic HTML upload */
+		'queue'					:true,
+		'progress'				:false,
+		'pausequeue'			:true,
+		'pauseupload'			:false,
+		'filesize'				:false
+	};
+	
 	this._init();
 };
 
@@ -58,6 +67,10 @@ Ext.extend(Ext.ux.uploader.AbstractAdapter, Ext.util.Observable,{
 	
 	_init : function(){
 		
+	},
+	
+	hasFeature : function(featureName){
+		return this._features[featureName];
 	},
 	
 	browse : function(){
