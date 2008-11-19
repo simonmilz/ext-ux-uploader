@@ -2,6 +2,12 @@ Ext.namespace('Ext.ux.uploader');
 Ext.ux.uploader.GearsAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
 	console : window.console || {log:Ext.emptyFn},
 	_init : function(){
+		
+		Ext.apply(this._features, {
+			'pauseupload'		:true,
+			'filesize'			:true
+		});
+		
 		this._paramKeys = Ext.apply({
 			'filename'		:'filename',
 			'start'			:'start',
