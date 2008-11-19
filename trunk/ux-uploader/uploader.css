@@ -1,0 +1,87 @@
+/*
+ * Ext JS Library 2.2
+ * Copyright(c) 2006-2008, Ext JS, LLC.
+ * licensing@extjs.com
+ * 
+ * http://extjs.com/license
+ */
+
+/*
+ * FileUploadField component styles
+ */
+.x-form-file-wrap {
+    position: relative;
+    height: 22px;
+}
+.x-form-file-wrap .x-form-file {
+	position: absolute;
+	right: 0;
+	-moz-opacity: 0;
+	filter:alpha(opacity: 0);
+	opacity: 0;
+	
+	z-index: 2;
+    height: 22px;
+	cursor: pointer !important;
+}
+.x-form-file-wrap .x-form-file-btn {
+	position: absolute;
+	right: 0;
+	top: 0;
+	z-index: 1;
+}
+.x-form-file-wrap .x-form-file-text {
+    position: absolute;
+    left: 0;
+    z-index: 3;
+    color: #777;
+}
+.x-upload-panel-entry{
+	border: 1px solid #ccc;
+	margin: 6px;
+	background: #f3f3f3;
+}
+.x-upload-panel-entry-pad{
+	position: relative;
+	border: 1px solid #fff;
+	padding: 4px 40px 4px 24px;
+}
+.x-upload-panel-entry-progress{
+	width: 0px;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 1;
+	background-color: #D3E1F1;
+}
+.x-upload-panel-entry-title{
+	position: relative;
+	z-index: 2;
+	font-size: 11px;
+	font-family: Tahoma;
+	font-weight: bold;
+}
+.x-upload-panel-entry-icon{
+	position: absolute;
+	z-index: 2;
+	top: 2px;
+	left: 2px;
+}
+.x-upload-panel-icon{
+	display: block;
+	width: 16px;
+	height: 16px;
+	background: transparent none top left no-repeat;
+}
+.page-icon .x-upload-panel-icon{
+	background-image: url(page_white.png);
+}
+.loading-icon .x-upload-panel-icon{
+	background-image: url(loading.gif) !important;
+}
+.add-icon{
+	background-image: url(add.png) !important;
+}
+.upload-icon{
+	background-image: url(page_white_get.png) !important;
+}
