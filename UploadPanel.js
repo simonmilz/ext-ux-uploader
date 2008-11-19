@@ -88,14 +88,16 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 		this.doLayout();
 	},
 	
-	_initEntry : function(el,file){
+	_initEntry : function(file,el){
 		el.buttons 	= el.child('.x-upload-panel-entry-buttons');
 		el.progress = el.child('.x-upload-panel-entry-progress');
 		el.title 	= el.child('.x-upload-panel-entry-title');
 		el.icon		= el.child('.x-upload-panel-entry-icon');
+		/*
 		if( this._adapter.hasFeature('filesize') ){
 			// file.
 		}
+		*/
 	},
 	
 	_onQueueError : function(errors){
