@@ -1,0 +1,3 @@
+= Example =
+
+A live example (just a live version of the sample from the trunk) is available at http://www.owlwatch.com/examples/extjs/ux/uploader/trunk/samples/index.php
