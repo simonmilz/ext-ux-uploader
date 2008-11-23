@@ -50,6 +50,40 @@ Ext.onReady(function(){
 		autoScroll		:true,
 		filters			:['.jpg','.gif','.png']
 	});
+	try{
+		
+		
+	var panel2 = new Ext.ux.uploader.Panel({
+			adapter 		:'gears',
+			extraParams		:{adapter:'gears'},
+			maxRequests		:2,
+			border			:false,
+			autoScroll		:true,
+			fullUpload		:true,
+			filters			:['.jpg','.png','.gif','.pdf','.rtf','.doc','.docx']
+		});
+	
+	var gearsWindow = new Ext.Window({
+		id			:'gears-window',
+		title 		:'Gears Window',
+		layout		:'fit',
+		width		:400,
+		height		:300,
+		items 		:[panel2],
+		closeAction :'hide'
+	})
+	
+	var gearsButton = new Ext.Button({
+		
+		text: 'Launch Gears In Window',
+		handler : function(){
+			gearsWindow.show();
+		},
+		renderTo		:'gears-button'
+	});
+	}catch(e){
+		console.log(e);
+	}
 	
 	
 });
