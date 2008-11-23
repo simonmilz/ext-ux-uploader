@@ -3,15 +3,18 @@ Ext.namespace('Ext.ux.uploader');
 Ext.ux.uploader.AbstractAdapter = function(config){
 	
 	Ext.ux.uploader.AbstractAdapter.superclass.constructor.call(this);
+	
+	this._initialConfig = config;
 	Ext.apply(this,config);
 	this.addEvents({
-		/* upload events */
+		/* upload events for the entire upload process */
 		'uploadstart'			:true,
-		'uploadcomplete'		:true,
-		'uploaderror'			:true,
+		'uploadstop'			:true,
 		'uploadprogress'		:true,
 		'queueerror'			:true,
+		'queueempty'			:true,
 		'filequeued'			:true,
+		'fileremoved'			:true,
 		'queuecomplete'			:true
 	});
 	
@@ -85,6 +88,10 @@ Ext.extend(Ext.ux.uploader.AbstractAdapter, Ext.util.Observable,{
 		// empty the queue.
 	},
 	
+	stop : function(force){
+		// stop the queued uploads
+	},
+	
 	removeAt : function(index){
 		// remove a file from the queue
 	},
@@ -95,6 +102,14 @@ Ext.extend(Ext.ux.uploader.AbstractAdapter, Ext.util.Observable,{
 	
 	getCompleted : function(){
 		
+	},
+	
+	get : function(key,defaultValue){
+		var privateKey = '_'+key; 
+		if( this[privateKey] ){
+			return this[privateKey];
+		}
+		return Ext.type(defaultValue) == 'undefined' ? false : defaultValue;
 	}
 	
 });

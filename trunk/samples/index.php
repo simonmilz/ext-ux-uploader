@@ -94,8 +94,11 @@ body{
 <script type="text/javascript" src="http://extjs.cachefly.net/ext-2.2/adapter/ext/ext-base.js"> </script>
 <script type="text/javascript" src="http://extjs.cachefly.net/ext-2.2/ext-all.js"> </script>
 <script type='text/javascript' src='../AbstractAdapter.js'></script>
+<script type='text/javascript' src='../AbstractFileUpload.js'></script>
 <script type='text/javascript' src='../GearsAdapter.js'></script>
+<script type='text/javascript' src='../GearsFileUpload.js'></script>
 <script type='text/javascript' src='../HtmlAdapter.js'></script>
+<script type='text/javascript' src='../HtmlFileUpload.js'></script>
 <script type='text/javascript' src='../UploadPanel.js'></script>
 
 <!--[if IE]>
@@ -126,8 +129,8 @@ Ext.onReady(function(){
 	</div>
 </div>
 <div style='clear:both;'>
-<a href='#source' id='sourceToggle'>Show/Hide Source</a>
-<div style='display: none; height: 300px; overflow: auto; margin: 10px; border: 1px solid #ccc; padding: 10px;' id='source'>
+<a style='margin-left: 20px;' href='#source' id='sourceToggle'>Show/Hide Source</a>
+<div style='display: none; height: 300px; overflow: auto; margin: 20px; border: 1px solid #ccc; padding: 10px;' id='source'>
 <pre style='font-size: 12px;'>
 <?php include dirname(__FILE__).'/sample.js'; ?>
 </pre>

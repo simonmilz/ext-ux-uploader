@@ -1,11 +1,22 @@
 Ext.namespace('Ext.ux.uploader');
 
+Ext.ux.uploader.ICONS = {
+	/* Images */
+	'jpg'	:'image-icon',
+	'gif'	:'image-icon',
+	'png'	:'image-icon',
+	
+	/* Documents */
+	'doc'	:'doc-icon',
+	'docx'	:'doc-icon',
+	
+	/* Acrobat */
+	'pdf'	:'pdf-icon'
+};
+
 Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 	
 	initComponent : function(){
-		// create the uploader
-		
-		this._queue = new Ext.util.MixedCollection();
 		
 		this._addFilesBtn = new Ext.Button({
 			text 		:'Add Files',
@@ -15,7 +26,7 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 		
 		this._adapterType = this.adapter || this.adapterType || 'html';
 		
-		this._adapter = Ext.ux.uploader.AdapterFactory.create(this._adapterType,
+		this._uploader = Ext.ux.uploader.AdapterFactory.create(this._adapterType,
 			Ext.apply({
 				button 		:this._addFilesBtn,
 				url 		:'?',
@@ -24,13 +35,13 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 			}, this.initialConfig)
 		);
 		
-		if( !this._adapter ){
+		if( !this._uploader ){
 			throw "Uploader Adapter could not be found: "+this._adapterType;
 		}
 		this._uploadBtn = new Ext.Button({
 			text 			:'Upload',
-			handler			:this._adapter.upload,
-			scope			:this._adapter,
+			handler			:this._uploader.upload,
+			scope			:this._uploader,
 			cls				:'x-btn-text-icon',
 			iconCls			:'upload-icon',
 			disabled		:true
@@ -47,12 +58,6 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 		});
 		this.bbar = this._statusBar;
 		
-		this.relayEvents(this._adapter,[
-			'filequeued',
-			'queuecomplete',
-			'uploadcomplete'
-		]);
-		
 		if( !this.entryTpl ){
 			this.entryTpl = new Ext.XTemplate(
 				'<div class="x-upload-panel-entry">',
@@ -68,36 +73,46 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 			);
 		}
 		
-		this._adapter.on('filequeued', this._onFileQueued, this);
-		this._adapter.on('queueerror', this._onQueueError, this);
-		this._adapter.on('uploadcomplete', this._onUploadComplete, this);
-		this._adapter.on('uploadstart', this._onUploadStart, this);
-		this._adapter.on('uploadprogress', this._onUploadProgress, this);
-		//this._uploader.on('queuecomplete', this._onQueueComplete, this);
+		this._uploader.on('filequeued', this._onFileQueued, this);
+		this._uploader.on('fileremoved', this._onFileRemoved, this);
+		this._uploader.on('queueerror', this._onQueueError, this);
+		this._uploader.on('queueempty', this._onQueueEmpty, this);
+		this._uploader.on('uploadstart', this._onUploaderStart, this);
+		this._uploader.on('uploadstop', this._onUploaderStop, this);
 		
 		Ext.ux.uploader.Panel.superclass.initComponent.call(this);
 	},
 	
-	_onFileQueued : function(file){
-		var name = file.data.name;
+	_onFileQueued : function(fileUpload){
+		
+		// listen to this file...
+		fileUpload.on('uploadprogress', this._onFileUploadProgress, this);
+		fileUpload.on('uploadstart', this._onFileUploadStart, this);
+		
 		// create an entry in the queue
-		var el = Ext.get(this.entryTpl.append(this.body,{name:name}));
-		this._initEntry(file,el);
-		this._queue.add(file.id,el);
+		var el = Ext.get(this.entryTpl.append(this.body,{name:fileUpload.getFilename()}));
+		this._initEntry(el);
+		fileUpload.setVar('panelEl', el);
 		this._uploadBtn.enable();
 		this.doLayout();
 	},
 	
-	_initEntry : function(file,el){
+	_onFileRemoved : function(fileUpload){
+		var el = fileUpload.getVar('panelEl').remove();
+		delete el;
+	},
+	
+	//_var re = new RegExp(("("+this.filters.join('|')+")$").replace(/\./,'\.'),'i');
+	
+	_initEntry : function(el){
 		el.buttons 	= el.child('.x-upload-panel-entry-buttons');
 		el.progress = el.child('.x-upload-panel-entry-progress');
 		el.title 	= el.child('.x-upload-panel-entry-title');
 		el.icon		= el.child('.x-upload-panel-entry-icon');
-		/*
-		if( this._adapter.hasFeature('filesize') ){
-			// file.
-		}
-		*/
+		el.pad 		= el.child('.x-upload-panel-entry-pad');
+		
+		// should we add an icon?
+		
 	},
 	
 	_onQueueError : function(errors){
@@ -118,29 +133,30 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 		});
 	},
 	
-	_onUploadStart : function(file){
-		var el = this._queue.get(file.id);
-		var icon = el.child('.x-upload-panel-entry-icon');
-		icon.removeClass('page-icon');
-		icon.addClass('loading-icon');
+	_onFileUploadStart : function(fileUpload){
+		var el = fileUpload.getVar('panelEl');
+		el.icon.removeClass('page-icon');
+		el.icon.addClass('loading-icon');
+	},
+	
+	_onUploaderStart : function(uploader){
 		this._statusBar.showBusy();
 	},
 	
-	_onUploadComplete : function(file){
+	_onUploaderStop : function(uploader){
 		this._statusBar.clearStatus({useDefaults:true});
-		var el = this._queue.removeKey(file.id);
-		this._uploadBtn.disable();
-		Ext.fly(el).remove();
 	},
 	
-	_onUploadProgress : function(file, info){
-		var el = this._queue.get(file.id);
+	_onQueueEmpty : function(uploader){
+		this._uploadBtn.disable();
+	},
+	
+	_onFileUploadProgress : function(fileUpload, info){
+		var el = fileUpload.getVar('panelEl');
 		var pad = Ext.fly(el).child('.x-upload-panel-entry-pad');
 		var progress = Ext.fly(el).child('.x-upload-panel-entry-progress');
-		if(progress && pad){
-			progress.setHeight(pad.getHeight());
-			progress.setWidth(pad.getWidth() * info.percent );
-		}
+		el.progress.setHeight(el.pad.getHeight());
+		el.progress.setWidth(el.pad.getWidth() * info.percent );
 	}
 	
 });

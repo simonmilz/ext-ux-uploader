@@ -21,29 +21,35 @@ Ext.onReady(function(){
 		);
 		
 	}
+	
 	else{
+		
 		var panel = new Ext.ux.uploader.Panel({
 			adapter 		:'gears',
 			extraParams		:{adapter:'gears'},
 			width			:300,
 			height			:250,
+			maxRequests		:2,
 			title			:'Gears Panel',
 			renderTo		:"gears-panel",
 			autoScroll		:true,
 			fullUpload		:true,
 			filters			:['.jpg','.png','.gif']
 		});
+		
 	}
+	
 	var panel2 = new Ext.ux.uploader.Panel({
 		adapter 		:'html',
 		extraParams		:{adapter:'html'},
 		width			:300,
 		height			:250,
-		maxRequests		:10,
+		maxRequests		:1,
 		title			:'Html Panel',
 		renderTo		:"html-panel",
 		autoScroll		:true,
 		filters			:['.jpg','.gif','.png']
 	});
+	
 	
 });
