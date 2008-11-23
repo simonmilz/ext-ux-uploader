@@ -1,19 +1,5 @@
 Ext.namespace('Ext.ux.uploader');
 
-Ext.ux.uploader.ICONS = {
-	/* Images */
-	'jpg'	:'image-icon',
-	'gif'	:'image-icon',
-	'png'	:'image-icon',
-	
-	/* Documents */
-	'doc'	:'doc-icon',
-	'docx'	:'doc-icon',
-	
-	/* Acrobat */
-	'pdf'	:'pdf-icon'
-};
-
 Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 	
 	initComponent : function(){
@@ -61,9 +47,9 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 		if( !this.entryTpl ){
 			this.entryTpl = new Ext.XTemplate(
 				'<div class="x-upload-panel-entry">',
+					'<div class="x-upload-panel-entry-buttons"></div>',
+					'<div class="x-upload-panel-entry-icon"><span class="x-upload-panel-icon"></span></div>',
 					'<div class="x-upload-panel-entry-pad">',
-						'<div class="x-upload-panel-entry-icon page-icon"><span class="x-upload-panel-icon"></span></div>',
-						'<div class="x-upload-panel-entry-buttons"></div>',
 						'<div class="x-upload-panel-entry-progress"></div>',
 						'<div class="x-upload-panel-entry-title">',
 							'<span>{name}</span>',
@@ -91,7 +77,7 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 		
 		// create an entry in the queue
 		var el = Ext.get(this.entryTpl.append(this.body,{name:fileUpload.getFilename()}));
-		this._initEntry(el);
+		this._initEntry(el, fileUpload);
 		fileUpload.setVar('panelEl', el);
 		this._uploadBtn.enable();
 		this.doLayout();
@@ -102,9 +88,7 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 		delete el;
 	},
 	
-	//_var re = new RegExp(("("+this.filters.join('|')+")$").replace(/\./,'\.'),'i');
-	
-	_initEntry : function(el){
+	_initEntry : function(el, fileUpload){
 		el.buttons 	= el.child('.x-upload-panel-entry-buttons');
 		el.progress = el.child('.x-upload-panel-entry-progress');
 		el.title 	= el.child('.x-upload-panel-entry-title');
@@ -112,7 +96,20 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 		el.pad 		= el.child('.x-upload-panel-entry-pad');
 		
 		// should we add an icon?
+		var type = fileUpload.getType();
+		if( type !== 'unknown'){
+			el.icon.addClass(type+'-icon');
+		}
 		
+		// add the remove button...
+		el.removeIcon = el.buttons.createChild({
+			'tag'		:'img',
+			'src'		:Ext.BLANK_IMAGE_URL,
+			'cls'		:'icon remove-icon'
+		});
+		el.removeIcon.on('click', function(){
+			this._uploader.remove(fileUpload);
+		}, this);
 	},
 	
 	_onQueueError : function(errors){

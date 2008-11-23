@@ -35,7 +35,7 @@ Ext.ux.uploader.GearsFileUpload = Ext.extend( Ext.ux.uploader.AbstractFileUpload
 	_sendChunk : function(){
 		
 		var info=this._getUploadInfo();
-		
+		if( this._request ) delete this._request;
 		this._request = google.gears.factory.create('beta.httprequest');
 		this._request.onreadystatechange = this._onReadyStateChange.createDelegate(this);
 		this._request.upload.onprogress = this._onUploadProgress.createDelegate(this);

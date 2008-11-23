@@ -34,7 +34,7 @@ Ext.onReady(function(){
 			renderTo		:"gears-panel",
 			autoScroll		:true,
 			fullUpload		:true,
-			filters			:['.jpg','.png','.gif']
+			filters			:['.jpg','.png','.gif','.pdf','.rtf','.doc','.docx']
 		});
 		
 	}
