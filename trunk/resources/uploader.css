@@ -40,11 +40,12 @@
 	border: 1px solid #ccc;
 	margin: 6px;
 	background: #f3f3f3;
+	position: relative;
 }
 .x-upload-panel-entry-pad{
 	position: relative;
 	border: 1px solid #fff;
-	padding: 4px 40px 4px 24px;
+	padding: 4px 4px 4px 24px;
 }
 .x-upload-panel-entry-progress{
 	width: 0px;
@@ -54,27 +55,50 @@
 	z-index: 1;
 	background-color: #D3E1F1;
 }
+.x-upload-panel-entry-buttons{
+	float: right;
+	position: relative;
+	z-index: 3;
+	margin-top: 3px;
+	margin-right: 4px;
+}
+.x-upload-panel-entry-buttons .icon{
+	width: 16px;
+	height: 16px;
+	margin: 0px 1px;
+	cursor: pointer;
+}
+.x-upload-panel-entry-buttons .remove-icon{
+	background-image: url(cross.png);
+}
 .x-upload-panel-entry-title{
 	position: relative;
 	z-index: 2;
 	font-size: 11px;
 	font-family: Tahoma;
-	font-weight: bold;
+	color: #666;
+	font-weight: normal;
 }
 .x-upload-panel-entry-icon{
 	position: absolute;
 	z-index: 2;
-	top: 2px;
+	top: 3px;
 	left: 2px;
 }
 .x-upload-panel-icon{
 	display: block;
 	width: 16px;
 	height: 16px;
-	background: transparent none top left no-repeat;
+	background: transparent url(file-types/unknown.png) top left no-repeat;
 }
-.page-icon .x-upload-panel-icon{
-	background-image: url(page_white.png);
+.image-icon .x-upload-panel-icon{
+	background-image: url(file-types/image.png);
+}
+.document-icon .x-upload-panel-icon{
+	background-image: url(file-types/document.png);
+}
+.acrobat-icon .x-upload-panel-icon{
+	background-image: url(file-types/acrobat.png);
 }
 .loading-icon .x-upload-panel-icon{
 	background-image: url(loading.gif) !important;

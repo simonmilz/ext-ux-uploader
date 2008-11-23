@@ -20,6 +20,13 @@ Ext.extend(Ext.ux.uploader.AbstractFileUpload, Ext.util.Observable, {
 		
 	},
 	
+	getType : function(){
+		var name = this.getFilename();
+		var matches = name.match(/\.([a-zA-Z0-9]*)$/);
+		var type = matches ? Ext.ux.uploader.AbstractFileUpload.TYPES[matches[1].toLowerCase()] : null;
+		return type || 'unknown';
+	},
+	
 	start : function(){
 		
 	},
@@ -69,3 +76,18 @@ Ext.extend(Ext.ux.uploader.AbstractFileUpload, Ext.util.Observable, {
 	}
 	
 });
+
+Ext.ux.uploader.AbstractFileUpload.TYPES = {
+	// Images
+	'jpg'	:'image',
+	'gif'	:'image',
+	'png'	:'image',
+	
+	// Documents
+	'rtf'	:'document',
+	'doc'	:'document',
+	'docx'	:'document',
+	
+	// Acrobat
+	'pdf'	:'acrobat'
+};

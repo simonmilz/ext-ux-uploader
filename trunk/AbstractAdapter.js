@@ -92,6 +92,10 @@ Ext.extend(Ext.ux.uploader.AbstractAdapter, Ext.util.Observable,{
 		// stop the queued uploads
 	},
 	
+	remove : function(fileUpload){
+		
+	},
+	
 	removeAt : function(index){
 		// remove a file from the queue
 	},

@@ -165,6 +165,10 @@ Ext.ux.uploader.GearsAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
 		);
 	},
 	
+	remove : function(fileUpload){
+		this._queue.remove(fileUpload);
+	},
+	
 	removeAt : function(index){
 		this._queue.removeAt(index);
 	},
