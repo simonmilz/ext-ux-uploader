@@ -67,7 +67,7 @@ Ext.onReady(function(){
 		
 			text: 'Launch Gears Uploader Window with Image Preview',
 			handler : function(){
-				gearsWindow.show.();
+				gearsWindow.show();
 			},
 			renderTo		:'gears-button'
 		});
