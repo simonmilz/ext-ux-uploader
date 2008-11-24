@@ -172,6 +172,9 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 		var el = fileUpload.getVar('panelEl');
 		el.icon.removeClass('page-icon');
 		el.icon.addClass('loading-icon');
+		if( !this._uploader.hasFeature('progress') ){
+			el.addClass('loading-bg');
+		}
 	},
 	
 	_onUploaderStart : function(uploader){
