@@ -32,7 +32,7 @@ Ext.onReady(function(){
 			width			:300,
 			height			:250,
 			maxSize			:MAXSIZE,
-			maxRequests		:2,
+			maxRequests		:4,
 			title			:'Gears Panel',
 			renderTo		:"gears-panel",
 			autoScroll		:true,
