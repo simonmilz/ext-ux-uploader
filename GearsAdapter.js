@@ -74,7 +74,7 @@ Ext.ux.uploader.GearsAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
 				continue;
 			}
 			if( this._maxSize && files[i].blob.length > this._maxSize ){
-				var size = Math.round(this._maxSize / 1000 )+'KB';
+				var size = Ext.ux.uploader.Util.getSize(this._maxSize);
 				errors[errors.length] = {
 					message :String.format(this.lang.EXCEEDS_MAXSIZE, size),
 					name	:files[i].name
