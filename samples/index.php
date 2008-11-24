@@ -93,13 +93,7 @@ body{
 <script type="text/javascript" src="http://code.google.com/apis/gears/gears_init.js" ></script>
 <script type="text/javascript" src="http://extjs.cachefly.net/ext-2.2/adapter/ext/ext-base.js"> </script>
 <script type="text/javascript" src="http://extjs.cachefly.net/ext-2.2/ext-all.js"> </script>
-<script type='text/javascript' src='../AbstractAdapter.js'></script>
-<script type='text/javascript' src='../AbstractFileUpload.js'></script>
-<script type='text/javascript' src='../GearsAdapter.js'></script>
-<script type='text/javascript' src='../GearsFileUpload.js'></script>
-<script type='text/javascript' src='../HtmlAdapter.js'></script>
-<script type='text/javascript' src='../HtmlFileUpload.js'></script>
-<script type='text/javascript' src='../UploadPanel.js'></script>
+<script type='text/javascript' src='../build/ext-ux-uploader-min.js'></script>
 
 <!--[if IE]>
 <script type='text/javascript' 
