@@ -14,6 +14,8 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 			this.previewHeight = this.previewHeight || 40;
 		}
 		
+		this.autoScroll = this.autoScroll === false ? false : true;
+		
 		this._adapterType = this.adapter || this.adapterType || 'html';
 		
 		this._uploader = Ext.ux.uploader.AdapterFactory.create(this._adapterType,
