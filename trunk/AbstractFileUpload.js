@@ -79,8 +79,18 @@ Ext.extend(Ext.ux.uploader.AbstractFileUpload, Ext.util.Observable, {
 	},
 	
 	getSize : function(){
+		return Ext.ux.uploader.Util.getSize(this.getTotalBytes());
+	},
+	
+	getPercentUploaded : function(){
+		return 0;
+	}
+	
+});
+
+Ext.ux.uploader.Util = {
+	getSize : function(bytes){
 		var sizes = ['KB','MB','GB'];
-		var bytes = this.getTotalBytes();
 		for(var i=sizes.length-1; i>=0; i--){
 			var s= 1024;
 			for(var x=0;x<i;x++){
@@ -93,13 +103,8 @@ Ext.extend(Ext.ux.uploader.AbstractFileUpload, Ext.util.Observable, {
 			}
 		}
 		return bytes+' bytes';
-	},
-	
-	getPercentUploaded : function(){
-		return 0;
 	}
-	
-});
+};
 
 Ext.ux.uploader.AbstractFileUpload.TYPES = {
 	// Images
