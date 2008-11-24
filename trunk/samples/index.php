@@ -93,8 +93,14 @@ body{
 <script type="text/javascript" src="http://code.google.com/apis/gears/gears_init.js" ></script>
 <script type="text/javascript" src="http://extjs.cachefly.net/ext-2.2/adapter/ext/ext-base.js"> </script>
 <script type="text/javascript" src="http://extjs.cachefly.net/ext-2.2/ext-all.js"> </script>
-<script type='text/javascript' src='../build/ext-ux-uploader-min.js'></script>
-
+<script type='text/javascript' src='../AbstractUploader.js'></script>
+<script type='text/javascript' src='../AbstractFileUpload.js'></script>
+<script type='text/javascript' src='../Util.js'></script>
+<script type='text/javascript' src='../HtmlAdapter.js'></script>
+<script type='text/javascript' src='../HtmlFileUpload.js'></script>
+<script type='text/javascript' src='../GearsAdapter.js'></script>
+<script type='text/javascript' src='../GearsFileUpload.js'></script>
+<script type='text/javascript' src='../Panel.js'></script>
 <!--[if IE]>
 <script type='text/javascript' 
         src='http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js'></script>
@@ -123,10 +129,12 @@ Ext.onReady(function(){
     </div>
     <div style="clear:both;margin: 10px;" id="gears-button"></div>
     <div style="clear:both;margin: 10px;" id="html-button"></div>
+    
     <p>I have enabled filtering for these panels and the maximum upload size is 2MB.</p>
     <p>Please check the source to see which file types are allowed for each panel / window -
     however, image files are accepted by all of them.</p>
-    <p>The files are not stored on the server.</p>
+    <p>The files are not stored on the server</p>
+    
 </div>
 
 <div style='clear:both;'>
