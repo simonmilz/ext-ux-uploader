@@ -1,5 +1,3 @@
-Ext.namespace('Ext.ux.uploader');
-
 Ext.ux.uploader.HtmlFileUpload = Ext.extend( Ext.ux.uploader.AbstractFileUpload, {
 	
 	_init : function(){

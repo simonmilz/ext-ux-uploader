@@ -1,4 +1,3 @@
-Ext.namespace('Ext.ux.uploader');
 Ext.ux.uploader.HtmlAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
 	_init : function(){
 		this._uploading = false;

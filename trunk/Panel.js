@@ -1,5 +1,3 @@
-Ext.namespace('Ext.ux.uploader');
-
 Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 	
 	initComponent : function(){

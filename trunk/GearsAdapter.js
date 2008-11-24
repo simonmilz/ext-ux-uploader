@@ -1,4 +1,3 @@
-Ext.namespace('Ext.ux.uploader');
 Ext.ux.uploader.GearsAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
 	console : window.console || {log:Ext.emptyFn},
 	_init : function(){

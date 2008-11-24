@@ -1,5 +1,3 @@
-Ext.namespace('Ext.ux.uploader');
-
 Ext.ux.uploader.GearsFileUpload = Ext.extend( Ext.ux.uploader.AbstractFileUpload, {
 	
 	_init : function(){
@@ -18,7 +16,8 @@ Ext.ux.uploader.GearsFileUpload = Ext.extend( Ext.ux.uploader.AbstractFileUpload
 				var localServer = google.gears.factory.create('beta.localserver');
 				var store = localServer.createStore('ux-uploader-gears-adapter');
 				this._previewUrl = this.getFilename()+this.getFilesize();
-				store.captureBlob( this.file.blob, this._previewUrl );
+				/* The third argument is available in 0.5 */
+				store.captureBlob( this.file.blob, this._previewUrl /* , 'image/'+this.getExt() */ );
 			}catch(e){
 				console.log(e.message);
 			}
