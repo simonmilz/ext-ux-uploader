@@ -6,8 +6,9 @@ Ext.ux.uploader.GearsAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
 		this._uploading = false;
 		
 		Ext.apply(this._features, {
-			'pauseupload'		:true,
-			'filesize'			:true
+			'pauseupload'	:true,
+			'filesize'		:true,
+			'progress'		:true
 		});
 		
 		this._paramKeys = Ext.apply({
