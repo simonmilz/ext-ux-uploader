@@ -12,23 +12,23 @@
 .x-form-file-wrap {
     position: relative;
     height: 22px;
-	overflow: hidden !important;
+    overflow: hidden !important;
 }
 .x-form-file-wrap .x-form-file {
-	position: absolute;
-	right: 0;
-	-moz-opacity: .0;
-	filter:alpha(opacity: 0);
-	opacity: .0;
-	z-index: 2;
+    position: absolute;
+    right: 0;
+    -moz-opacity: .0;
+    filter:alpha(opacity: 0);
+    opacity: .0;
+    z-index: 2;
     height: 22px;
-	cursor: pointer !important;
+    cursor: pointer !important;
 }
 .x-form-file-wrap .x-form-file-btn {
-	position: absolute;
-	right: 0;
-	top: 0;
-	z-index: 1;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 1;
 }
 .x-form-file-wrap .x-form-file-text {
     position: absolute;
@@ -37,100 +37,100 @@
     color: #777;
 }
 .x-upload-panel-entry{
-	border: 1px solid #ccc;
-	margin: 6px;
-	background: #f3f3f3;
-	position: relative;
+    border: 1px solid #ccc;
+    margin: 6px;
+    background: #f3f3f3;
+    position: relative;
 }
 .x-upload-panel-entry-preview{
-	float: left;
-	position: relative;
-	z-index: 3;
-	margin-top: 0px;
-	margin-left: 0px;
-	margin-right: 4px;
-	display: none;
-	opacity: .8;
-	-moz-opacity: .8;
-	filter: alpha(opacity=80);
+    float: left;
+    position: relative;
+    z-index: 3;
+    margin-top: 0px;
+    margin-left: 0px;
+    margin-right: 4px;
+    display: none;
+    opacity: .8;
+    -moz-opacity: .8;
+    filter: alpha(opacity=80);
 }
 .x-upload-panel-entry-clear{
-	clear: both;
-	height: 1px;
-	font-size: 1px;
-	line-height: 1px;
+    clear: both;
+    height: 1px;
+    font-size: 1px;
+    line-height: 1px;
 }
 .x-upload-panel-entry-pad{
-	position: relative;
-	border: 1px solid #fff;
-	padding: 2px 2px 1px;
+    position: relative;
+    border: 1px solid #fff;
+    padding: 2px 2px 1px;
 }
 .loading-bg{
-	background-image:url(loading-bg.gif);
+    background-image:url(loading-bg.gif);
 }
 .x-upload-panel-entry-progress{
-	width: 0px;
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	z-index: 1;
-	background-color: #D3E1F1;
+    width: 0px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 1;
+    background-color: #D3E1F1;
 }
 .x-upload-panel-entry-buttons{
-	float: right;
-	position: relative;
-	z-index: 3;
+    float: right;
+    position: relative;
+    z-index: 3;
 }
 .x-upload-panel-entry-buttons .icon{
-	width: 16px;
-	height: 16px;
-	margin: 0px 1px;
-	cursor: pointer;
+    width: 16px;
+    height: 16px;
+    margin: 0px 1px;
+    cursor: pointer;
 }
 .x-upload-panel-entry-buttons .remove-icon{
-	background-image: url(cross.png);
+    background-image: url(cross.png);
 }
 .x-upload-panel-entry-title{
-	position: relative;
-	z-index: 2;
-	font-size: 11px;
-	font-family: Tahoma;
-	color: #666;
-	margin: 0px 2px;
-	font-weight: normal;
+    position: relative;
+    z-index: 2;
+    font-size: 11px;
+    font-family: Tahoma;
+    color: #666;
+    margin: 0px 2px;
+    font-weight: normal;
 }
 .x-upload-panel-entry-icon{
-	position: relative;
-	float: left;
-	z-index: 2;
+    position: relative;
+    float: left;
+    z-index: 2;
 }
 .x-upload-panel-icon{
-	display: block;
-	width: 16px;
-	height: 16px;
-	margin-right: 4px;
-	background: transparent url(file-types/unknown.png) top left no-repeat;
+    display: block;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+    background: transparent url(file-types/unknown.png) top left no-repeat;
 }
 .image-icon .x-upload-panel-icon{
-	background-image: url(file-types/image.png);
+    background-image: url(file-types/image.png);
 }
 .document-icon .x-upload-panel-icon{
-	background-image: url(file-types/document.png);
+    background-image: url(file-types/document.png);
 }
 .acrobat-icon .x-upload-panel-icon{
-	background-image: url(file-types/acrobat.png);
+    background-image: url(file-types/acrobat.png);
 }
 .loading-icon .x-upload-panel-icon{
-	background-image: url(loading.gif) !important;
+    background-image: url(loading.gif) !important;
 }
 .add-icon{
-	background-image: url(add.png) !important;
+    background-image: url(add.png) !important;
 }
 .upload-icon{
-	background-image: url(page_white_get.png) !important;
+    background-image: url(page_white_get.png) !important;
 }
 .error-icon{
-	background: transparent url(exclamation.png) no-repeat scroll 3px 3px;
-	padding-left:25px !important;
-	color: red;
+    background: transparent url(exclamation.png) no-repeat scroll 3px 3px;
+    padding-left:25px !important;
+    color: red;
 }
