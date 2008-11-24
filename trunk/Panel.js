@@ -2,9 +2,9 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
     
     initComponent : function(){
         this._addFilesBtn = new Ext.Button({
-            text         :'Add Files',
-            cls            :'x-btn-text-icon',
-            iconCls        :'add-icon'
+            text        :'Add Files',
+            cls         :'x-btn-text-icon',
+            iconCls     :'add-icon'
         });
         
         if( this.usePreview ){
