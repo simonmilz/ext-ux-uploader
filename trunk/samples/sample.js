@@ -46,8 +46,8 @@ Ext.onReady(function(){
 				maxSize			:MAXSIZE,
 				usePreview		:true,
 				imagesOnly		:true,
-				previewWidth	:100,
-				previewHeight	:80,
+				previewWidth	:50,
+				previewHeight	:40,
 				border			:false,
 				autoScroll		:true,
 				fullUpload		:true
