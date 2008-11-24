@@ -9,6 +9,11 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 			iconCls		:'add-icon'
 		});
 		
+		if( this.usePreview ){
+			this.previewWidth = this.previewWidth || 50;
+			this.previewHeight = this.previewHeight || 40;
+		}
+		
 		this._adapterType = this.adapter || this.adapterType || 'html';
 		
 		this._uploader = Ext.ux.uploader.AdapterFactory.create(this._adapterType,
@@ -17,7 +22,7 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 				url 		:'?',
 				maxRequests : 1,
 				chunkLength : 51200
-			}, this.initialConfig)
+			}, this.initialConfig )
 		);
 		
 		if( !this._uploader ){
@@ -46,13 +51,17 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 		if( !this.entryTpl ){
 			this.entryTpl = new Ext.XTemplate(
 				'<div class="x-upload-panel-entry">',
-					'<div class="x-upload-panel-entry-buttons"></div>',
-					'<div class="x-upload-panel-entry-icon"><span class="x-upload-panel-icon"></span></div>',
 					'<div class="x-upload-panel-entry-pad">',
+						
+						'<div class="x-upload-panel-entry-buttons"></div>',
+						'<div class="x-upload-panel-entry-preview"></div>',
+						'<div class="x-upload-panel-entry-icon"><span class="x-upload-panel-icon"></span></div>',
+						
 						'<div class="x-upload-panel-entry-progress"></div>',
 						'<div class="x-upload-panel-entry-title">',
 							'<span>{name}</span>',
 						'</div>',
+						'<div class="x-upload-panel-entry-clear"></div>',
 					'</div>',
 				'</div>'
 			);
@@ -75,7 +84,11 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 		fileUpload.on('uploadstart', this._onFileUploadStart, this);
 		
 		// create an entry in the queue
-		var el = Ext.get(this.entryTpl.append(this.body,{name:fileUpload.getFilename()}));
+		var name = fileUpload.getFilename();
+		if( this._uploader.hasFeature('filesize') ){
+			name+=' ('+fileUpload.getSize(true)+')';
+		}
+		var el = Ext.get(this.entryTpl.append(this.body,{name:name}));
 		this._initEntry(el, fileUpload);
 		fileUpload.setVar('panelEl', el);
 		this._uploadBtn.enable();
@@ -92,12 +105,38 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 		el.progress = el.child('.x-upload-panel-entry-progress');
 		el.title 	= el.child('.x-upload-panel-entry-title');
 		el.icon		= el.child('.x-upload-panel-entry-icon');
+		el.preview	= el.child('.x-upload-panel-entry-preview');
 		el.pad 		= el.child('.x-upload-panel-entry-pad');
 		
-		// should we add an icon?
+		// try to add the icon...
 		var type = fileUpload.getType();
 		if( type !== 'unknown'){
 			el.icon.addClass(type+'-icon');
+		}
+		// can we preview this file and are previews enabled?
+		if( fileUpload.canPreview() && this.usePreview ){
+			
+			el.preview.setStyle({display: 'block'});
+			el.icon.setStyle({display: 'none'});
+			
+			var img = new Image();
+			img.onload = function(){
+				var w = img.width, h = img.height, w2,h2;
+				if( w > h ){
+					w2 = this.previewWidth;
+					h2 = parseInt(img.height * ( this.previewWidth / w));
+				}else{
+					h2 = this.previewHeight;
+					w2 = parseInt(img.width * ( this.previewHeight / h));
+				}
+				el.preview.createChild({
+					tag : 'img',
+					src : fileUpload.getPreviewUrl(),
+					width : w2,
+					height: h2
+				});
+			}.createDelegate(this);
+			img.src = fileUpload.getPreviewUrl();
 		}
 		
 		// add the remove button...
@@ -153,6 +192,10 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 		var progress = Ext.fly(el).child('.x-upload-panel-entry-progress');
 		el.progress.setHeight(el.pad.getHeight());
 		el.progress.setWidth(el.pad.getWidth() * info.percent );
+	},
+	
+	browse : function(){
+		this._uploader.browse();
 	}
 	
 });

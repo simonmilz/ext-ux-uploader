@@ -36,6 +36,10 @@ Ext.ux.uploader.GearsAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
 		this._fullUpload = this.fullUpload || false;
 		this._maxSize = false;
 		
+		if( this.imagesOnly ){
+			this.filters = ['.jpg','.gif','.png','.bmp'];
+		}
+		
 		if( this.filters ){
 			this._gearsOpenFilesOptions.filter = this.filters;
 		}
@@ -52,6 +56,7 @@ Ext.ux.uploader.GearsAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
 	
 	_onFileUploadRemoved : function(fileUpload){
 		this.fireEvent('fileremoved', fileUpload );
+		fileUpload.destroy();
 		if( this._queue.getCount() == 0 ){
 			this.fireEvent('queueempty', this);
 		}
