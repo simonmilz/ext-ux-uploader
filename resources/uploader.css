@@ -50,9 +50,9 @@
 	margin-left: 0px;
 	margin-right: 4px;
 	display: none;
-	opacity: .9;
-	-moz-opacity: .9;
-	filter: alpha(opacity=90);
+	opacity: .8;
+	-moz-opacity: .8;
+	filter: alpha(opacity=80);
 }
 .x-upload-panel-entry-clear{
 	clear: both;
