@@ -8,7 +8,7 @@ Ext.ux.uploader.AbstractAdapter = function(config){
     Ext.apply(this,config);
     this.addEvents({
         /* upload events for the entire upload process */
-        'uploadstart'      		:true,
+        'uploadstart'           :true,
         'uploadstop'            :true,
         'uploadprogress'        :true,
         'queueerror'            :true,
