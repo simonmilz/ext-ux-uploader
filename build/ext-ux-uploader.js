@@ -8,23 +8,23 @@ Ext.ux.uploader.AbstractAdapter = function(config){
     Ext.apply(this,config);
     this.addEvents({
         /* upload events for the entire upload process */
-        'uploadstart'            :true,
+        'uploadstart'           :true,
         'uploadstop'            :true,
         'uploadprogress'        :true,
         'queueerror'            :true,
         'queueempty'            :true,
         'filequeued'            :true,
-        'fileremoved'            :true,
-        'queuecomplete'            :true
+        'fileremoved'           :true,
+        'queuecomplete'         :true
     });
     
     this._features = {
         /* These are the features for the basic HTML upload */
-        'queue'                    :true,
-        'progress'                :false,
+        'queue'               	:true,
+        'progress'              :false,
         'pausequeue'            :true,
-        'pauseupload'            :false,
-        'filesize'                :false
+        'pauseupload'           :false,
+        'filesize'              :false
     };
     
     this._init();
@@ -146,9 +146,9 @@ Ext.ux.uploader.AdapterFactory= (function(){
     Ext.ux.uploader.AbstractFileUpload.superclass.constructor.call(this);
     this.addEvents({
         'uploadstart'        :true,
-        'uploadsuccess'        :true,
+        'uploadsuccess'      :true,
         'uploadpause'        :true,
-        'uploadfailure'        :true,
+        'uploadfailure'      :true,
         'uploaderror'        :true
     });
     this._initialConfig = config;
@@ -239,7 +239,7 @@ Ext.ux.uploader.AbstractFileUpload.TYPES = {
     // Documents
     'rtf'    :'document',
     'doc'    :'document',
-    'docx'    :'document',
+    'docx'   :'document',
     
     // Acrobat
     'pdf'    :'acrobat'
@@ -311,7 +311,7 @@ Ext.ux.uploader.AbstractFileUpload.TYPES = {
                     return {
                         "success"    :false,
                         "message"    :"Invalid response. Expected JSON string.",
-                        "response"    :r.responseText
+                        "response"   :r.responseText
                     };
                 }
                 var t = Ext.type(rs);
@@ -342,9 +342,9 @@ Ext.ux.uploader.AbstractFileUpload.TYPES = {
     
     _createActiveFileInput : function(){
         this._activeInput = this._wrap.createChild({
-            tag            :'input',
+            tag         :'input',
             type        :'file',
-            cls            :'x-form-file',
+            cls         :'x-form-file',
             size        :1
         });
         this._activeInput.hover(
@@ -404,10 +404,10 @@ Ext.ux.uploader.AbstractFileUpload.TYPES = {
         this._activeInput.un('change', this._onFileSelected, this);
         
         var fileUpload = new Ext.ux.uploader.HtmlFileUpload({
-            id            :value,
+            id          :value,
             filename    :value,
-            uploader     :this,
-            input        :this._activeInput
+            uploader    :this,
+            input       :this._activeInput
         });
         
         fileUpload.on('uploadsuccess', this._onUploadSuccess, this);
@@ -513,11 +513,11 @@ Ext.ux.uploader.AdapterFactory.reg('html', Ext.ux.uploader.HtmlAdapter);Ext.ux.u
     start : function(){
         this.input.dom.name=this.uploader.get('paramKeys').file;
         this.form.submit({
-            url        :this.uploader.get('url'),
-            params     :this.uploader.extraParams || {},
-            scope    :this,
-            success :this._onUploadSuccess,
-            failure :this._onUploadFailure
+            url         :this.uploader.get('url'),
+            params      :this.uploader.extraParams || {},
+            scope       :this,
+            success     :this._onUploadSuccess,
+            failure     :this._onUploadFailure
         });
         this._uploading = true;
         this.fireEvent('uploadstart', this);
@@ -550,16 +550,16 @@ Ext.ux.uploader.AdapterFactory.reg('html', Ext.ux.uploader.HtmlAdapter);Ext.ux.u
         this._uploading = false;
         
         Ext.apply(this._features, {
-            'pauseupload'    :true,
-            'filesize'        :true,
-            'progress'        :true
+            'pauseupload'   :true,
+            'filesize'      :true,
+            'progress'      :true
         });
         
         this._paramKeys = Ext.apply({
-            'filename'        :'filename',
-            'start'            :'start',
-            'end'            :'end',
-            'total'            :'total',
+            'filename'      :'filename',
+            'start'         :'start',
+            'end'           :'end',
+            'total'         :'total',
             'length'        :'length'
         }, this.paramKeys || {} );
         delete this.paramKeys;
@@ -820,9 +820,9 @@ Ext.ux.uploader.AdapterFactory.reg('gears', Ext.ux.uploader.GearsAdapter);Ext.ux
         this._request.upload.onprogress = this._onUploadProgress.createDelegate(this);
 
         var h = {
-            'Content-Disposition'     : "attachment; filename='"+this.getFilename()+"'",
-            'Content-Type'            : "application/octet-stream",
-            'Content-Range'            : "bytes "+info.start+"-"+info.end+"/"+info.total
+            'Content-Disposition'   :"attachment; filename='"+this.getFilename()+"'",
+            'Content-Type'          :"application/octet-stream",
+            'Content-Range'         :"bytes "+info.start+"-"+info.end+"/"+info.total
         };
         
         var params = {};
@@ -948,9 +948,9 @@ Ext.ux.uploader.AdapterFactory.reg('gears', Ext.ux.uploader.GearsAdapter);Ext.ux
     
     initComponent : function(){
         this._addFilesBtn = new Ext.Button({
-            text         :'Add Files',
-            cls            :'x-btn-text-icon',
-            iconCls        :'add-icon'
+            text        :'Add Files',
+            cls         :'x-btn-text-icon',
+            iconCls     :'add-icon'
         });
         
         if( this.usePreview ){
@@ -964,10 +964,10 @@ Ext.ux.uploader.AdapterFactory.reg('gears', Ext.ux.uploader.GearsAdapter);Ext.ux
         
         this._uploader = Ext.ux.uploader.AdapterFactory.create(this._adapterType,
             Ext.apply({
-                button         :this._addFilesBtn,
-                url         :'?',
-                maxRequests : 1,
-                chunkLength : 51200
+                button          :this._addFilesBtn,
+                url             :'?',
+                maxRequests     :1,
+                chunkLength     :51200
             }, this.initialConfig )
         );
         
@@ -1062,12 +1062,12 @@ Ext.ux.uploader.AdapterFactory.reg('gears', Ext.ux.uploader.GearsAdapter);Ext.ux
     
     _initEntry : function(el, fileUpload){
         
-        el.buttons     = el.child('.x-upload-panel-entry-buttons');
-        el.progress = el.child('.x-upload-panel-entry-progress');
-        el.title     = el.child('.x-upload-panel-entry-title');
-        el.icon        = el.child('.x-upload-panel-entry-icon');
-        el.preview    = el.child('.x-upload-panel-entry-preview');
-        el.pad         = el.child('.x-upload-panel-entry-pad');
+        el.buttons      = el.child('.x-upload-panel-entry-buttons');
+        el.progress     = el.child('.x-upload-panel-entry-progress');
+        el.title        = el.child('.x-upload-panel-entry-title');
+        el.icon         = el.child('.x-upload-panel-entry-icon');
+        el.preview      = el.child('.x-upload-panel-entry-preview');
+        el.pad          = el.child('.x-upload-panel-entry-pad');
         
         // try to add the icon...
         var type = fileUpload.getType();
@@ -1120,9 +1120,9 @@ Ext.ux.uploader.AdapterFactory.reg('gears', Ext.ux.uploader.GearsAdapter);Ext.ux
             text = errors[0].name+': '+errors[0].message;
         }
         this._statusBar.setStatus({
-            text        :text,
-            iconCls        :'error-icon',
-            clear        :{
+            text            :text,
+            iconCls         :'error-icon',
+            clear           :{
                 wait        :3000,
                 anim        :true
             }
