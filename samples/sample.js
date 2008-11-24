@@ -66,10 +66,7 @@ Ext.onReady(function(){
 		var gearsButton = new Ext.Button({
 		
 			text: 'Launch Gears Uploader Window with Image Preview',
-			handler : function(){
-				gearsWindow.show();
-				panel2.browse();
-			},
+			handler : gearsWindow.show.createDelegate(gearsWindow),
 			renderTo		:'gears-button'
 		});
 		
