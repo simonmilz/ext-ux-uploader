@@ -27,36 +27,36 @@ Ext.onReady(function(){
     else{
         
         var panel1 = new Ext.ux.uploader.Panel({
-            adapter         :'gears',
-            extraParams        :{adapter:'gears'},
-            width            :300,
-            height            :250,
-            maxSize            :MAXSIZE,
-            maxRequests        :4,
-            title            :'Gears Panel',
-            renderTo        :"gears-panel",
-            fullUpload        :true,
-            filters            :['.jpg','.png','.gif','.pdf','.rtf','.doc','.docx']
+            adapter             :'gears',
+            extraParams         :{adapter:'gears'},
+            width               :300,
+            height              :250,
+            maxSize             :MAXSIZE,
+            maxRequests         :4,
+            title               :'Gears Panel',
+            renderTo            :"gears-panel",
+            fullUpload          :true,
+            filters             :['.jpg','.png','.gif','.pdf','.rtf','.doc','.docx']
         });
         var panel2 = new Ext.ux.uploader.Panel({
                 adapter         :'gears',
-                extraParams        :{adapter:'gears'},
-                maxRequests        :2,
-                maxSize            :MAXSIZE,
-                usePreview        :true,
-                imagesOnly        :true,
-                border            :false,
-                fullUpload        :true
+                extraParams     :{adapter:'gears'},
+                maxRequests     :2,
+                maxSize         :MAXSIZE,
+                usePreview      :true,
+                imagesOnly      :true,
+                border          :false,
+                fullUpload      :true
             });
         
         var gearsWindow = new Ext.Window({
-            id            :'gears-window',
-            title         :'Gears Window',
-            layout        :'fit',
-            width        :400,
-            height        :300,
-            items         :[panel2],
-            closeAction :'hide'
+            id              :'gears-window',
+            title           :'Gears Window',
+            layout          :'fit',
+            width           :400,
+            height          :300,
+            items           :[panel2],
+            closeAction     :'hide'
         });
         
         var gearsButton = new Ext.Button({
@@ -71,32 +71,32 @@ Ext.onReady(function(){
     
     var panel3 = new Ext.ux.uploader.Panel({
         adapter         :'html',
-        extraParams        :{adapter:'html'},
-        width            :300,
-        height            :250,
-        maxRequests        :1,
-        title            :'Html Panel',
+        extraParams     :{adapter:'html'},
+        width           :300,
+        height          :250,
+        maxRequests     :1,
+        title           :'Html Panel',
         renderTo        :"html-panel",
-        filters            :['.jpg','.gif','.png']
+        filters         :['.jpg','.gif','.png']
     });
     
     var panel4 = new Ext.ux.uploader.Panel({
             adapter         :'html',
-            extraParams        :{adapter:'html'},
-            maxRequests        :2,
-            border            :false,
-            fullUpload        :true,
-            filters            :['.jpg','.png','.gif','.pdf','.rtf','.doc','.docx']
+            extraParams     :{adapter:'html'},
+            maxRequests     :2,
+            border          :false,
+            fullUpload      :true,
+            filters         :['.jpg','.png','.gif','.pdf','.rtf','.doc','.docx']
         });
     
     var htmlWindow = new Ext.Window({
-        id            :'html-window',
-        title         :'Html Window',
-        layout        :'fit',
-        width        :400,
-        height        :300,
-        items         :[panel4],
-        closeAction :'hide'
+        id              :'html-window',
+        title           :'Html Window',
+        layout          :'fit',
+        width           :400,
+        height          :300,
+        items           :[panel4],
+        closeAction     :'hide'
     });    
     
     var htmlButton = new Ext.Button({
