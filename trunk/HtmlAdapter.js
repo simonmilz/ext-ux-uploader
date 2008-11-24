@@ -210,6 +210,13 @@ Ext.ux.uploader.HtmlAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
 	
 	remove : function(fileUpload){
 		this._queue.remove(fileUpload);
+	},
+	
+	clearQueue : function(){
+		this._queue.each( function(o){
+			this._queue.remove(o);
+			o.destroy();
+		},this);
 	}
 	
 });

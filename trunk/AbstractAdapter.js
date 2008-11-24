@@ -100,6 +100,10 @@ Ext.extend(Ext.ux.uploader.AbstractAdapter, Ext.util.Observable,{
 		// remove a file from the queue
 	},
 	
+	clearQueue : function(){
+		
+	},
+	
 	getQueue : function(){
 		// return queue
 	},

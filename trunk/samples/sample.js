@@ -1,5 +1,5 @@
 Ext.onReady(function(){
-	
+	Ext.BLANK_IMAGE_URL = '../resources/s.gif';
 	var MAXSIZE = 2048000;
 	
 	if (!window.google || !google.gears) {
