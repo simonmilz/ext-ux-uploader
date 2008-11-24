@@ -63,6 +63,7 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 						'<div class="x-upload-panel-entry-title">',
 							'<span>{name}</span>',
 						'</div>',
+						
 						'<div class="x-upload-panel-entry-clear"></div>',
 					'</div>',
 				'</div>'
@@ -77,6 +78,19 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 		this._uploader.on('uploadstop', this._onUploaderStop, this);
 		
 		Ext.ux.uploader.Panel.superclass.initComponent.call(this);
+		
+		// expose some uploader methods and events
+		this.exposeMethods(this._uploader,[
+			'browse',
+			'upload'
+		]);
+		this.relayEvents(this._uploader,[
+			'queuecomplete',
+			'uploadstart',
+			'uploadstop',
+			'queueempty',
+			'filequeued'
+		]);
 	},
 	
 	_onFileQueued : function(fileUpload){
@@ -103,6 +117,7 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 	},
 	
 	_initEntry : function(el, fileUpload){
+		
 		el.buttons 	= el.child('.x-upload-panel-entry-buttons');
 		el.progress = el.child('.x-upload-panel-entry-progress');
 		el.title 	= el.child('.x-upload-panel-entry-title');
@@ -180,10 +195,12 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 	},
 	
 	_onUploaderStart : function(uploader){
+		this._uploadBtn.disable();
 		this._statusBar.showBusy();
 	},
 	
 	_onUploaderStop : function(uploader){
+		this._uploadBtn.enable();
 		this._statusBar.clearStatus({useDefaults:true});
 	},
 	
@@ -197,6 +214,19 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
 		var progress = Ext.fly(el).child('.x-upload-panel-entry-progress');
 		el.progress.setHeight(el.pad.getHeight());
 		el.progress.setWidth(el.pad.getWidth() * info.percent );
+	},
+	
+	exposeMethods : function(object, methods){
+		if( Ext.type(methods) == 'string' ){
+			methods = [methods];
+		}
+		if( !Ext.type(methods) == 'array'){
+			return;
+		}
+		for(var i = 0; i < methods.length; i++ ){
+			var m = methods[i];
+			this[m]=object[m].createDelegate(object);
+		}
 	},
 	
 	browse : function(){
