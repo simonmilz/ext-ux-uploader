@@ -15,11 +15,13 @@ Ext.ux.uploader.GearsFileUpload = Ext.extend( Ext.ux.uploader.AbstractFileUpload
 		this._retries = 0;
 		if( this.canPreview() && this.uploader.usePreview ){
 			try{
-			var localServer = google.gears.factory.create('beta.localserver');
-			var store = localServer.createStore('ux-uploader-gears-adapter');
-			this._previewUrl = this.getFilename()+this.getFilesize();
-			store.captureBlob( this.file.blob, this._previewUrl );
-			}catch(e){console.log(e.message);}
+				var localServer = google.gears.factory.create('beta.localserver');
+				var store = localServer.createStore('ux-uploader-gears-adapter');
+				this._previewUrl = this.getFilename()+this.getFilesize();
+				store.captureBlob( this.file.blob, this._previewUrl );
+			}catch(e){
+				console.log(e.message);
+			}
 		}
 	},
 	
