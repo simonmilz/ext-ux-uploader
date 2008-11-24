@@ -166,7 +166,7 @@ Ext.ux.uploader.HtmlAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
 			if( fileUpload.isUploading() ){
 				finished = false;
 				requests++;
-				return false;
+				return true;
 			}
 			if( fileUpload.isComplete() ){
 				return true;
