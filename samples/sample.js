@@ -35,7 +35,6 @@ Ext.onReady(function(){
 			maxRequests		:4,
 			title			:'Gears Panel',
 			renderTo		:"gears-panel",
-			autoScroll		:true,
 			fullUpload		:true,
 			filters			:['.jpg','.png','.gif','.pdf','.rtf','.doc','.docx']
 		});
@@ -46,10 +45,7 @@ Ext.onReady(function(){
 				maxSize			:MAXSIZE,
 				usePreview		:true,
 				imagesOnly		:true,
-				previewWidth	:50,
-				previewHeight	:40,
 				border			:false,
-				autoScroll		:true,
 				fullUpload		:true
 			});
 		
@@ -71,7 +67,6 @@ Ext.onReady(function(){
 			},
 			renderTo		:'gears-button'
 		});
-		
 	}
 	
 	var panel3 = new Ext.ux.uploader.Panel({
@@ -82,7 +77,6 @@ Ext.onReady(function(){
 		maxRequests		:1,
 		title			:'Html Panel',
 		renderTo		:"html-panel",
-		autoScroll		:true,
 		filters			:['.jpg','.gif','.png']
 	});
 	
@@ -91,7 +85,6 @@ Ext.onReady(function(){
 			extraParams		:{adapter:'html'},
 			maxRequests		:2,
 			border			:false,
-			autoScroll		:true,
 			fullUpload		:true,
 			filters			:['.jpg','.png','.gif','.pdf','.rtf','.doc','.docx']
 		});
