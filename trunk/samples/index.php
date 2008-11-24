@@ -127,8 +127,10 @@ Ext.onReady(function(){
 	<div style="float:left;margin: 10px;">
 		<div id="html-panel"></div>
 	</div>
+	<div style="clear:both;margin: 10px;" id="gears-button"></div>
+	<div style="clear:both;margin: 10px;" id="html-button"></div>
 </div>
-<div style="clear:both;" id="gears-button"></div>
+
 <div style='clear:both;'>
 <a style='margin-left: 20px;' href='#source' id='sourceToggle'>Show/Hide Source</a>
 <div style='display: none; height: 300px; overflow: auto; margin: 20px; border: 1px solid #ccc; padding: 10px;' id='source'>

@@ -42,10 +42,25 @@
 	background: #f3f3f3;
 	position: relative;
 }
+.x-upload-panel-entry-preview{
+	float: left;
+	position: relative;
+	z-index: 3;
+	margin-top: 0px;
+	margin-left: 0px;
+	margin-right: 4px;
+	display: none;
+}
+.x-upload-panel-entry-clear{
+	clear: both;
+	height: 1px;
+	font-size: 1px;
+	line-height: 1px;
+}
 .x-upload-panel-entry-pad{
 	position: relative;
 	border: 1px solid #fff;
-	padding: 4px 4px 4px 24px;
+	padding: 2px 2px 1px;
 }
 .x-upload-panel-entry-progress{
 	width: 0px;
@@ -59,8 +74,6 @@
 	float: right;
 	position: relative;
 	z-index: 3;
-	margin-top: 3px;
-	margin-right: 4px;
 }
 .x-upload-panel-entry-buttons .icon{
 	width: 16px;
@@ -77,18 +90,19 @@
 	font-size: 11px;
 	font-family: Tahoma;
 	color: #666;
+	margin: 0px 2px;
 	font-weight: normal;
 }
 .x-upload-panel-entry-icon{
-	position: absolute;
+	position: relative;
+	float: left;
 	z-index: 2;
-	top: 3px;
-	left: 2px;
 }
 .x-upload-panel-icon{
 	display: block;
 	width: 16px;
 	height: 16px;
+	margin-right: 4px;
 	background: transparent url(file-types/unknown.png) top left no-repeat;
 }
 .image-icon .x-upload-panel-icon{

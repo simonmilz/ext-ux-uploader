@@ -20,11 +20,18 @@ Ext.extend(Ext.ux.uploader.AbstractFileUpload, Ext.util.Observable, {
 		
 	},
 	
-	getType : function(){
+	getExt : function(){
 		var name = this.getFilename();
 		var matches = name.match(/\.([a-zA-Z0-9]*)$/);
-		var type = matches ? Ext.ux.uploader.AbstractFileUpload.TYPES[matches[1].toLowerCase()] : null;
-		return type || 'unknown';
+		return (matches ? matches[1] : '').toLowerCase();
+	},
+	
+	getType : function(){
+		return Ext.ux.uploader.AbstractFileUpload.TYPES[this.getExt()] || 'unknown';
+	},
+	
+	canPreview : function(){
+		return false;
 	},
 	
 	start : function(){
@@ -69,6 +76,23 @@ Ext.extend(Ext.ux.uploader.AbstractFileUpload, Ext.util.Observable, {
 	
 	getTotalBytes : function(){
 		return 0;
+	},
+	
+	getSize : function(){
+		var sizes = ['KB','MB','GB'];
+		var bytes = this.getTotalBytes();
+		for(var i=sizes.length-1; i>=0; i--){
+			var s= 1024;
+			for(var x=0;x<i;x++){
+				s*=1000;
+			}
+			if( bytes > s ){
+				var s = bytes / s;
+				s = parseInt(s*100)/100;
+				return s+' '+sizes[i];
+			}
+		}
+		return bytes+' bytes';
 	},
 	
 	getPercentUploaded : function(){

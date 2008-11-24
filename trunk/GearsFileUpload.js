@@ -13,6 +13,14 @@ Ext.ux.uploader.GearsFileUpload = Ext.extend( Ext.ux.uploader.AbstractFileUpload
 		this._fullUpload = this.uploader.get('fullUpload');
 		this._maxRetries = this.uploader.get('maxRetries');
 		this._retries = 0;
+		if( this.canPreview() && this.uploader.usePreview ){
+			try{
+			var localServer = google.gears.factory.create('beta.localserver');
+			var store = localServer.createStore('ux-uploader-gears-adapter');
+			this._previewUrl = this.getFilename()+this.getFilesize();
+			store.captureBlob( this.file.blob, this._previewUrl );
+			}catch(e){console.log(e.message);}
+		}
 	},
 	
 	start : function(){
@@ -125,12 +133,28 @@ Ext.ux.uploader.GearsFileUpload = Ext.extend( Ext.ux.uploader.AbstractFileUpload
 		}
 	},
 	
+	getPreviewUrl : function(){
+		return this._previewUrl || false;
+	},
+	
 	getFilename : function(){
 		return this.filename;
 	},
 	
+	getFilesize : function(){
+		return this.file.blob.length;
+	},
+	
 	destroy : function(){
-		
+		if( this.canPreview() && this.uploader.usePreview ){
+			var localServer = google.gears.factory.create('beta.localserver');
+			var store = localServer.createStore('ux-uploader-gears-adapter');
+			store.remove( this.getPreviewUrl() );
+		}
+	},
+	
+	getTotalBytes : function(){
+		return this.file.blob.length;
 	},
 	
 	isUploading : function(){
@@ -143,6 +167,10 @@ Ext.ux.uploader.GearsFileUpload = Ext.extend( Ext.ux.uploader.AbstractFileUpload
 	
 	getId : function(){
 		return this.id;
+	},
+	
+	canPreview : function(){
+		return this.getType() == 'image';
 	}
 	
 });
