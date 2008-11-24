@@ -123,6 +123,10 @@ Ext.onReady(function(){
     </div>
     <div style="clear:both;margin: 10px;" id="gears-button"></div>
     <div style="clear:both;margin: 10px;" id="html-button"></div>
+    <p>I have enabled filtering for these panels and the maximum upload size is 2MB.</p>
+    <p>Please check the source to see which file types are allowed for each panel / window -
+    however, image files are accepted by all of them.</p>
+    <p>The files are not stored on the server.</p>
 </div>
 
 <div style='clear:both;'>
