@@ -35,7 +35,7 @@ Ext.onReady(function(){
             maxRequests         :4,
             title               :'Gears Panel',
             renderTo            :"gears-panel",
-            fullUpload          :true,
+            fullUpload          :false,
             filters             :['.jpg','.png','.gif','.pdf','.rtf','.doc','.docx']
         });
         var panel2 = new Ext.ux.uploader.Panel({
@@ -46,7 +46,7 @@ Ext.onReady(function(){
                 usePreview      :true,
                 imagesOnly      :true,
                 border          :false,
-                fullUpload      :true
+                fullUpload      :false
             });
         
         var gearsWindow = new Ext.Window({
