@@ -36,7 +36,7 @@ Ext.ux.uploader.GearsFileUpload = Ext.extend( Ext.ux.uploader.AbstractFileUpload
         var info={};
         info.start          = this._uploaded+(this._requestProgress);
         info.total          = this.file.blob.length;
-        info.end            = Math.min(this._uploaded + this._chunkLength, info.total );
+        info.end            = this.uploader.get('fullUpload') ? info.total : Math.min(this._uploaded + this._chunkLength, info.total );
         info.length         = info.end - this._uploaded;
         info.percent        = info.start/info.total;
         return info;
@@ -58,13 +58,14 @@ Ext.ux.uploader.GearsFileUpload = Ext.extend( Ext.ux.uploader.AbstractFileUpload
         };
         
         var params = {};
-        for(var key in this._paramKeys){
-            val = (key == 'filename') ? this.getFilename() : info[key] || '';
-            params[this._paramKeys[key]] = val;
+        var keys = this.uploader.get('paramKeys');
+        for(var key in keys ){
+            val = (key == 'filename') ? this.getFilename() : (info[key] || '');
+            params[keys[key]] = val;
         }
         var url = this.uploader.get('url') || '?';
         params = Ext.urlEncode(Ext.apply(params,this.uploader.extraParams||{}));
-        url += (url.indexOf('?') != -1 ? '&' : '?') + params;
+        url += ((url.indexOf('?') != -1 ? '&' : '?') + params);
         this._request.open('POST', url);
         
         for( var x in h ){
