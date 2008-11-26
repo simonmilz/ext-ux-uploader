@@ -1,6 +1,9 @@
 Ext.ux.uploader.GearsAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
-    console : window.console || {log:Ext.emptyFn},
+    
     _init : function(){
+        
+        this._queue = new Ext.util.MixedCollection();
+        this._queue.on('remove', this._onFileUploadRemoved, this);
         
         this._uploading = false;
         
@@ -24,9 +27,6 @@ Ext.ux.uploader.GearsAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
         }
         this._maxRequests = this.maxRequests || false;
         
-        this._queue = new Ext.util.MixedCollection();
-        this._queue.on('remove', this._onFileUploadRemoved, this);
-        
         this._complete = new Ext.util.MixedCollection();
         
         this._gearsDesktop = google.gears.factory.create('beta.desktop');
@@ -35,10 +35,6 @@ Ext.ux.uploader.GearsAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
         this._chunkLength = this.chunkLength || 20480;
         this._fullUpload = this.fullUpload || false;
         this._maxSize = false;
-        
-        if( this.imagesOnly ){
-            this.filters = ['.jpg','.gif','.png','.bmp'];
-        }
         
         if( this.filters ){
             this._gearsOpenFilesOptions.filter = this.filters;
@@ -138,13 +134,13 @@ Ext.ux.uploader.GearsAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
     },
     
     _onUploadSuccess : function(fileUpload){
-        this._queue.remove(fileUpload);
-        fileUpload.destroy();
+        this.fireEvent('uploadsuccess', this, fileUpload);
+        var removed = this._queue.remove(fileUpload);
         this._upload();
     },
     
-    _send : function(file){
-        return this._sendChunk(file);
+    _onUploadFailure : function(fileUpload){
+        this.fireEvent('uploadfailure', this, fileUpload);
     },
     
     /**

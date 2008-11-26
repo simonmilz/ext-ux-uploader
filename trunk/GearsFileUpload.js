@@ -34,10 +34,11 @@ Ext.ux.uploader.GearsFileUpload = Ext.extend( Ext.ux.uploader.AbstractFileUpload
     
     _getUploadInfo : function(){
         var info={};
-        info.start         = this._uploaded+(this._requestProgress);
-        info.total         = this.file.blob.length;
-        info.end         = Math.min(info.start + ( this._fullUpload ? info.total : this._chunkLength), info.total );
-        info.percent    = info.start/info.total;
+        info.start          = this._uploaded+(this._requestProgress);
+        info.total          = this.file.blob.length;
+        info.end            = Math.min(this._uploaded + this._chunkLength, info.total );
+        info.length         = info.end - this._uploaded;
+        info.percent        = info.start/info.total;
         return info;
     },
     
@@ -45,6 +46,7 @@ Ext.ux.uploader.GearsFileUpload = Ext.extend( Ext.ux.uploader.AbstractFileUpload
         
         var info=this._getUploadInfo();
         if( this._request ) delete this._request;
+        
         this._request = google.gears.factory.create('beta.httprequest');
         this._request.onreadystatechange = this._onReadyStateChange.createDelegate(this);
         this._request.upload.onprogress = this._onUploadProgress.createDelegate(this);
@@ -71,11 +73,11 @@ Ext.ux.uploader.GearsFileUpload = Ext.extend( Ext.ux.uploader.AbstractFileUpload
             }
         }
         this._requestProgress=0;
-        this._requestLength = info.end - info.start;
+        info = this._getUploadInfo();
         this._request.send(
             (info.start==0 && info.end == info.total) ?
             this.file.blob :
-            this.file.blob.slice(info.start,this._requestLength)
+            this.file.blob.slice(info.start,info.length)
         );
         return this._request;
     },
@@ -90,9 +92,12 @@ Ext.ux.uploader.GearsFileUpload = Ext.extend( Ext.ux.uploader.AbstractFileUpload
                         try{
                             this._retries = 0;
                             var response = Ext.decode( this._request.responseText );
-                            this._uploaded += this._requestLength;
+                            var info = this._getUploadInfo();
+                            this._uploaded += info.length;
+                            this._requestProgress = 0;
                             this.fireEvent('uploadprogress', this, this._getUploadInfo() );
-                            if(this._uploaded == this.file.blob.length ){
+                            info = this._getUploadInfo();
+                            if(this._uploaded == info.total){
                                 // fire finished event
                                 this._complete = true;
                                 this.fireEvent('uploadsuccess', this);

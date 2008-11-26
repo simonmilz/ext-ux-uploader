@@ -11,6 +11,8 @@ Ext.ux.uploader.AbstractAdapter = function(config){
         'uploadstart'           :true,
         'uploadstop'            :true,
         'uploadprogress'        :true,
+        'uploadsuccess'         :true,
+        'uploadfailure'         :true,
         'queueerror'            :true,
         'queueempty'            :true,
         'filequeued'            :true,
@@ -26,6 +28,10 @@ Ext.ux.uploader.AbstractAdapter = function(config){
         'pauseupload'           :false,
         'filesize'              :false
     };
+    
+    if( this.imagesOnly ){
+        this.filters = ['.jpg','.gif','.png','.bmp'];
+    }
     
     this._init();
 };
@@ -96,12 +102,24 @@ Ext.extend(Ext.ux.uploader.AbstractAdapter, Ext.util.Observable,{
         
     },
     
+    isUploading : function(){
+        return this._uploading;
+    },
+    
+    isQueueEmpty : function(){
+        return this._queue.getCount() == 0;
+    },
+    
     removeAt : function(index){
         // remove a file from the queue
     },
     
     clearQueue : function(){
         
+    },
+    
+    reset : function(){
+        this.clearQueue();  
     },
     
     getQueue : function(){
