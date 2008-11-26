@@ -148,15 +148,8 @@ Ext.ux.uploader.GearsAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
      */
     reset : function(){
         this._queue.each(function(obj){
-            delete obj;
+            this._queue.remove(obj);
         });
-        delete this._queue;
-        this._queue = new Ext.util.MixedCollection();
-        this._complete.each(function(obj){
-            delete obj;
-        });
-        delete this._complete;
-        this._complete = new Ext.util.MixedCollection();
     },
     
     browse : function(){

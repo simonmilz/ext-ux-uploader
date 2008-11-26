@@ -138,7 +138,6 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
             
             var img = new Image();
             img.onload = function(){
-                console.log('imageOnload')
                 var w = img.width, h = img.height, w2,h2;
                 if( w > h ){
                     w2 = this.previewWidth;
