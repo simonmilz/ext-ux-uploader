@@ -68,26 +68,28 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
             );
         }
         
-        this._uploader.on('filequeued', this._onFileQueued, this);
-        this._uploader.on('fileremoved', this._onFileRemoved, this);
-        this._uploader.on('queueerror', this._onQueueError, this);
-        this._uploader.on('queueempty', this._onQueueEmpty, this);
-        this._uploader.on('uploadstart', this._onUploaderStart, this);
-        this._uploader.on('uploadstop', this._onUploaderStop, this);
+        this._uploader.on('filequeued',     this._onFileQueued,     this);
+        this._uploader.on('fileremoved',    this._onFileRemoved,    this);
+        this._uploader.on('queueerror',     this._onQueueError,     this);
+        this._uploader.on('queueempty',     this._onQueueEmpty,     this);
+        this._uploader.on('uploadstart',    this._onUploaderStart,  this);
+        this._uploader.on('uploadstop',     this._onUploaderStop,   this);
         
         Ext.ux.uploader.Panel.superclass.initComponent.call(this);
         
         // expose some uploader methods and events
         this.exposeMethods(this._uploader,[
             'browse',
-            'upload'
+            'upload',
+            'reset'
         ]);
         this.relayEvents(this._uploader,[
             'queuecomplete',
             'uploadstart',
             'uploadstop',
             'queueempty',
-            'filequeued'
+            'filequeued',
+            'fileremoved'
         ]);
     },
     
@@ -136,6 +138,7 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
             
             var img = new Image();
             img.onload = function(){
+                console.log('imageOnload')
                 var w = img.width, h = img.height, w2,h2;
                 if( w > h ){
                     w2 = this.previewWidth;
@@ -198,7 +201,7 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
     },
     
     _onUploaderStop : function(uploader){
-        this._uploadBtn.enable();
+        if( !this._uploader.isQueueEmpty() ) this._uploadBtn.enable();
         this._statusBar.clearStatus({useDefaults:true});
     },
     
@@ -211,7 +214,7 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
         var pad = Ext.fly(el).child('.x-upload-panel-entry-pad');
         var progress = Ext.fly(el).child('.x-upload-panel-entry-progress');
         el.progress.setHeight(el.pad.getHeight());
-        el.progress.setWidth(el.pad.getWidth() * info.percent );
+        el.progress.setWidth( parseInt(100*info.percent)+'%' );
     },
     
     exposeMethods : function(object, methods){
@@ -227,8 +230,8 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
         }
     },
     
-    browse : function(){
-        this._uploader.browse();
+    getUploader : function(){
+        return this._uploader;
     }
     
 });

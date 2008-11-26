@@ -1,10 +1,12 @@
 Ext.ux.uploader.HtmlAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
     _init : function(){
-        this._uploading = false;
-        this._errorReader = this.decodeHtmlInResponse !== false ? false : this._ErrorReader();
         
         this._queue = new Ext.util.MixedCollection();
         this._queue.on('remove', this._onFileUploadRemoved, this);
+        
+        this._uploading = false;
+        this._errorReader = this.decodeHtmlInResponse !== false ? false : this._ErrorReader();
+        
         this._completed = new Ext.util.MixedCollection();
         
         this._btn = this.button || new Ext.Button({buttonOnly:true});
@@ -29,6 +31,7 @@ Ext.ux.uploader.HtmlAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
     
     _onFileUploadRemoved : function(fileUpload){
         this.fireEvent('fileremoved', fileUpload );
+        fileUpload.destroy();
         if( this._queue.getCount() == 0 ){
             this.fireEvent('queueempty', this);
         }
@@ -190,11 +193,13 @@ Ext.ux.uploader.HtmlAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
     
     _onUploadSuccess : function(fileUpload){
         this._queue.remove(fileUpload);
+        this.fireEvent('uploadsuccess', this, fileUpload);
         fileUpload.destroy();
         this._upload();
     },
     
     _onUploadFailure : function(file,form,action){
+        this.fireEvent('uploadfailure', this, fileUpload);
         file.uploading=false;
         //this._upload();
     },
