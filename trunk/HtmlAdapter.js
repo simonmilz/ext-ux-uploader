@@ -187,7 +187,7 @@ Ext.ux.uploader.HtmlAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
                 this._uploading = false;
                 this.fireEvent('uploadstop',this);
             }
-            this.fireEvent('queuecomplete');
+            this.fireEvent('queueempty');
         }
     },
     
@@ -198,7 +198,7 @@ Ext.ux.uploader.HtmlAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
         this._upload();
     },
     
-    _onUploadFailure : function(file,form,action){
+    _onUploadFailure : function(fileUpload){
         this.fireEvent('uploadfailure', this, fileUpload);
         file.uploading=false;
         //this._upload();
@@ -213,7 +213,15 @@ Ext.ux.uploader.HtmlAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
     },
     
     remove : function(fileUpload){
+        var uploading = this.isUploading();
         this._queue.remove(fileUpload);
+        if( this.isQueueEmpty() ){
+            this.fireEvent('uploadstop', this);
+        }else{
+            if(uploading){
+                this.upload();
+            }
+        }
     },
     
     clearQueue : function(){

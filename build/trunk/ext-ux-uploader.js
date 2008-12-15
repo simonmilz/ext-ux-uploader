@@ -11,6 +11,8 @@ Ext.ux.uploader.AbstractAdapter = function(config){
         'uploadstart'           :true,
         'uploadstop'            :true,
         'uploadprogress'        :true,
+        'uploadsuccess'         :true,
+        'uploadfailure'         :true,
         'queueerror'            :true,
         'queueempty'            :true,
         'filequeued'            :true,
@@ -26,6 +28,10 @@ Ext.ux.uploader.AbstractAdapter = function(config){
         'pauseupload'           :false,
         'filesize'              :false
     };
+    
+    if( this.imagesOnly ){
+        this.filters = ['.jpg','.gif','.png','.bmp'];
+    }
     
     this._init();
 };
@@ -96,12 +102,24 @@ Ext.extend(Ext.ux.uploader.AbstractAdapter, Ext.util.Observable,{
         
     },
     
+    isUploading : function(){
+        return this._uploading;
+    },
+    
+    isQueueEmpty : function(){
+        return this._queue.getCount() == 0;
+    },
+    
     removeAt : function(index){
         // remove a file from the queue
     },
     
     clearQueue : function(){
         
+    },
+    
+    reset : function(){
+        this.clearQueue();  
     },
     
     getQueue : function(){
@@ -261,11 +279,13 @@ Ext.ux.uploader.AbstractFileUpload.TYPES = {
     }
 };Ext.ux.uploader.HtmlAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
     _init : function(){
-        this._uploading = false;
-        this._errorReader = this.decodeHtmlInResponse !== false ? false : this._ErrorReader();
         
         this._queue = new Ext.util.MixedCollection();
         this._queue.on('remove', this._onFileUploadRemoved, this);
+        
+        this._uploading = false;
+        this._errorReader = this.decodeHtmlInResponse !== false ? false : this._ErrorReader();
+        
         this._completed = new Ext.util.MixedCollection();
         
         this._btn = this.button || new Ext.Button({buttonOnly:true});
@@ -290,6 +310,7 @@ Ext.ux.uploader.AbstractFileUpload.TYPES = {
     
     _onFileUploadRemoved : function(fileUpload){
         this.fireEvent('fileremoved', fileUpload );
+        fileUpload.destroy();
         if( this._queue.getCount() == 0 ){
             this.fireEvent('queueempty', this);
         }
@@ -445,17 +466,19 @@ Ext.ux.uploader.AbstractFileUpload.TYPES = {
                 this._uploading = false;
                 this.fireEvent('uploadstop',this);
             }
-            this.fireEvent('queuecomplete');
+            this.fireEvent('queueempty');
         }
     },
     
     _onUploadSuccess : function(fileUpload){
         this._queue.remove(fileUpload);
+        this.fireEvent('uploadsuccess', this, fileUpload);
         fileUpload.destroy();
         this._upload();
     },
     
-    _onUploadFailure : function(file,form,action){
+    _onUploadFailure : function(fileUpload){
+        this.fireEvent('uploadfailure', this, fileUpload);
         file.uploading=false;
         //this._upload();
     },
@@ -469,7 +492,15 @@ Ext.ux.uploader.AbstractFileUpload.TYPES = {
     },
     
     remove : function(fileUpload){
+        var uploading = this.isUploading();
         this._queue.remove(fileUpload);
+        if( this.isQueueEmpty() ){
+            this.fireEvent('uploadstop', this);
+        }else{
+            if(uploading){
+                this.upload();
+            }
+        }
     },
     
     clearQueue : function(){
@@ -491,7 +522,7 @@ Ext.ux.uploader.AdapterFactory.reg('html', Ext.ux.uploader.HtmlAdapter);Ext.ux.u
             'tag' : 'form'
         });
         var form = new Ext.form.BasicForm( formEl,{
-            fileUpload            :true,
+            fileUpload             :true,
             errorReader            :this.uploader.get('errorReader')
         });
         // move the input out of button and create a new one...        
@@ -512,9 +543,11 @@ Ext.ux.uploader.AdapterFactory.reg('html', Ext.ux.uploader.HtmlAdapter);Ext.ux.u
     
     start : function(){
         this.input.dom.name=this.uploader.get('paramKeys').file;
+        var p = Ext.apply(this.uploader.extraParams||{});
+        p[this.uploader.get('paramKeys').filename]=this.getFilename();
         this.form.submit({
             url         :this.uploader.get('url'),
-            params      :this.uploader.extraParams || {},
+            params      :p,
             scope       :this,
             success     :this._onUploadSuccess,
             failure     :this._onUploadFailure
@@ -544,8 +577,11 @@ Ext.ux.uploader.AdapterFactory.reg('html', Ext.ux.uploader.HtmlAdapter);Ext.ux.u
     }
     
 });Ext.ux.uploader.GearsAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
-    console : window.console || {log:Ext.emptyFn},
+    
     _init : function(){
+        
+        this._queue = new Ext.util.MixedCollection();
+        this._queue.on('remove', this._onFileUploadRemoved, this);
         
         this._uploading = false;
         
@@ -569,9 +605,6 @@ Ext.ux.uploader.AdapterFactory.reg('html', Ext.ux.uploader.HtmlAdapter);Ext.ux.u
         }
         this._maxRequests = this.maxRequests || false;
         
-        this._queue = new Ext.util.MixedCollection();
-        this._queue.on('remove', this._onFileUploadRemoved, this);
-        
         this._complete = new Ext.util.MixedCollection();
         
         this._gearsDesktop = google.gears.factory.create('beta.desktop');
@@ -580,10 +613,6 @@ Ext.ux.uploader.AdapterFactory.reg('html', Ext.ux.uploader.HtmlAdapter);Ext.ux.u
         this._chunkLength = this.chunkLength || 20480;
         this._fullUpload = this.fullUpload || false;
         this._maxSize = false;
-        
-        if( this.imagesOnly ){
-            this.filters = ['.jpg','.gif','.png','.bmp'];
-        }
         
         if( this.filters ){
             this._gearsOpenFilesOptions.filter = this.filters;
@@ -683,13 +712,13 @@ Ext.ux.uploader.AdapterFactory.reg('html', Ext.ux.uploader.HtmlAdapter);Ext.ux.u
     },
     
     _onUploadSuccess : function(fileUpload){
-        this._queue.remove(fileUpload);
-        fileUpload.destroy();
+        this.fireEvent('uploadsuccess', this, fileUpload);
+        var removed = this._queue.remove(fileUpload);
         this._upload();
     },
     
-    _send : function(file){
-        return this._sendChunk(file);
+    _onUploadFailure : function(fileUpload){
+        this.fireEvent('uploadfailure', this, fileUpload);
     },
     
     /**
@@ -697,15 +726,8 @@ Ext.ux.uploader.AdapterFactory.reg('html', Ext.ux.uploader.HtmlAdapter);Ext.ux.u
      */
     reset : function(){
         this._queue.each(function(obj){
-            delete obj;
+            this._queue.remove(obj);
         });
-        delete this._queue;
-        this._queue = new Ext.util.MixedCollection();
-        this._complete.each(function(obj){
-            delete obj;
-        });
-        delete this._complete;
-        this._complete = new Ext.util.MixedCollection();
     },
     
     browse : function(){
@@ -716,7 +738,15 @@ Ext.ux.uploader.AdapterFactory.reg('html', Ext.ux.uploader.HtmlAdapter);Ext.ux.u
     },
     
     remove : function(fileUpload){
+        var uploading = this.isUploading();
         this._queue.remove(fileUpload);
+        if( this.isQueueEmpty() ){
+            this.fireEvent('uploadstop', this);
+        }else{
+            if(uploading){
+                this.upload();
+            }
+        }
     },
     
     removeAt : function(index){
@@ -804,10 +834,11 @@ Ext.ux.uploader.AdapterFactory.reg('gears', Ext.ux.uploader.GearsAdapter);Ext.ux
     
     _getUploadInfo : function(){
         var info={};
-        info.start         = this._uploaded+(this._requestProgress);
-        info.total         = this.file.blob.length;
-        info.end         = Math.min(info.start + ( this._fullUpload ? info.total : this._chunkLength), info.total );
-        info.percent    = info.start/info.total;
+        info.start          = this._uploaded+(this._requestProgress);
+        info.total          = this.file.blob.length;
+        info.end            = this.uploader.get('fullUpload') ? info.total : Math.min(this._uploaded + this._chunkLength, info.total );
+        info.length         = info.end - this._uploaded;
+        info.percent        = info.start/info.total;
         return info;
     },
     
@@ -815,6 +846,7 @@ Ext.ux.uploader.AdapterFactory.reg('gears', Ext.ux.uploader.GearsAdapter);Ext.ux
         
         var info=this._getUploadInfo();
         if( this._request ) delete this._request;
+        
         this._request = google.gears.factory.create('beta.httprequest');
         this._request.onreadystatechange = this._onReadyStateChange.createDelegate(this);
         this._request.upload.onprogress = this._onUploadProgress.createDelegate(this);
@@ -826,13 +858,14 @@ Ext.ux.uploader.AdapterFactory.reg('gears', Ext.ux.uploader.GearsAdapter);Ext.ux
         };
         
         var params = {};
-        for(var key in this._paramKeys){
-            val = (key == 'filename') ? this.getFilename() : info[key] || '';
-            params[this._paramKeys[key]] = val;
+        var keys = this.uploader.get('paramKeys');
+        for(var key in keys ){
+            val = (key == 'filename') ? this.getFilename() : (info[key] || '');
+            params[keys[key]] = val;
         }
         var url = this.uploader.get('url') || '?';
         params = Ext.urlEncode(Ext.apply(params,this.uploader.extraParams||{}));
-        url += (url.indexOf('?') != -1 ? '&' : '?') + params;
+        url += ((url.indexOf('?') != -1 ? '&' : '?') + params);
         this._request.open('POST', url);
         
         for( var x in h ){
@@ -841,11 +874,11 @@ Ext.ux.uploader.AdapterFactory.reg('gears', Ext.ux.uploader.GearsAdapter);Ext.ux
             }
         }
         this._requestProgress=0;
-        this._requestLength = info.end - info.start;
+        info = this._getUploadInfo();
         this._request.send(
             (info.start==0 && info.end == info.total) ?
             this.file.blob :
-            this.file.blob.slice(info.start,this._requestLength)
+            this.file.blob.slice(info.start,info.length)
         );
         return this._request;
     },
@@ -860,9 +893,12 @@ Ext.ux.uploader.AdapterFactory.reg('gears', Ext.ux.uploader.GearsAdapter);Ext.ux
                         try{
                             this._retries = 0;
                             var response = Ext.decode( this._request.responseText );
-                            this._uploaded += this._requestLength;
+                            var info = this._getUploadInfo();
+                            this._uploaded += info.length;
+                            this._requestProgress = 0;
                             this.fireEvent('uploadprogress', this, this._getUploadInfo() );
-                            if(this._uploaded == this.file.blob.length ){
+                            info = this._getUploadInfo();
+                            if(this._uploaded == info.total){
                                 // fire finished event
                                 this._complete = true;
                                 this.fireEvent('uploadsuccess', this);
@@ -917,6 +953,11 @@ Ext.ux.uploader.AdapterFactory.reg('gears', Ext.ux.uploader.GearsAdapter);Ext.ux
     },
     
     destroy : function(){
+        
+        if( this.isUploading() ){
+            this._request.abort();
+        }
+        
         if( this.canPreview() && this.uploader.usePreview ){
             var localServer = google.gears.factory.create('beta.localserver');
             var store = localServer.createStore('ux-uploader-gears-adapter');
@@ -974,15 +1015,19 @@ Ext.ux.uploader.AdapterFactory.reg('gears', Ext.ux.uploader.GearsAdapter);Ext.ux
         if( !this._uploader ){
             throw "Uploader Adapter could not be found: "+this._adapterType;
         }
-        this._uploadBtn = new Ext.Button({
-            text             :'Upload',
-            handler            :this._uploader.upload,
-            scope            :this._uploader,
-            cls                :'x-btn-text-icon',
-            iconCls            :'upload-icon',
-            disabled        :true
-        });
-        this.tbar = [this._addFilesBtn, '-', this._uploadBtn];
+        
+        this.tbar = [this._addFilesBtn];
+        if(this.hideUploadBtn !== false ){
+            this._uploadBtn = new Ext.Button({
+                text                :'Upload',
+                handler             :this._uploader.upload,
+                scope               :this._uploader,
+                cls                 :'x-btn-text-icon',
+                iconCls             :'upload-icon',
+                disabled            :true
+            });
+            this.tbar+=[ '-', this._uploadBtn];
+        }
         
         this._statusBar = new Ext.StatusBar({
             defaultText : '',
@@ -1014,26 +1059,30 @@ Ext.ux.uploader.AdapterFactory.reg('gears', Ext.ux.uploader.GearsAdapter);Ext.ux
             );
         }
         
-        this._uploader.on('filequeued', this._onFileQueued, this);
-        this._uploader.on('fileremoved', this._onFileRemoved, this);
-        this._uploader.on('queueerror', this._onQueueError, this);
-        this._uploader.on('queueempty', this._onQueueEmpty, this);
-        this._uploader.on('uploadstart', this._onUploaderStart, this);
-        this._uploader.on('uploadstop', this._onUploaderStop, this);
+        this._uploader.on('filequeued',     this._onFileQueued,     this);
+        this._uploader.on('fileremoved',    this._onFileRemoved,    this);
+        this._uploader.on('queueerror',     this._onQueueError,     this);
+        this._uploader.on('queueempty',     this._onQueueEmpty,     this);
+        this._uploader.on('uploadstart',    this._onUploaderStart,  this);
+        this._uploader.on('uploadstop',     this._onUploaderStop,   this);
         
         Ext.ux.uploader.Panel.superclass.initComponent.call(this);
         
         // expose some uploader methods and events
         this.exposeMethods(this._uploader,[
             'browse',
-            'upload'
+            'upload',
+            'reset',
+            'isQueueEmpty'
         ]);
         this.relayEvents(this._uploader,[
             'queuecomplete',
             'uploadstart',
             'uploadstop',
             'queueempty',
-            'filequeued'
+            'filequeued',
+            'fileremoved',
+            'uploadsuccess'
         ]);
     },
     
@@ -1051,7 +1100,9 @@ Ext.ux.uploader.AdapterFactory.reg('gears', Ext.ux.uploader.GearsAdapter);Ext.ux
         var el = Ext.get(this.entryTpl.append(this.body,{name:name}));
         this._initEntry(el, fileUpload);
         fileUpload.setVar('panelEl', el);
-        this._uploadBtn.enable();
+        if( this._uploadBtn ){
+            this._uploadBtn.enable();
+        }
         this.doLayout();
     },
     
@@ -1139,17 +1190,25 @@ Ext.ux.uploader.AdapterFactory.reg('gears', Ext.ux.uploader.GearsAdapter);Ext.ux
     },
     
     _onUploaderStart : function(uploader){
-        this._uploadBtn.disable();
+        if( this._uploadBtn ){
+            this._uploadBtn.disable();
+        }
         this._statusBar.showBusy();
     },
     
     _onUploaderStop : function(uploader){
-        this._uploadBtn.enable();
+        if( !this._uploader.isQueueEmpty() ){
+            if( this._uploadBtn ){
+                this._uploadBtn.enable();
+            }
+        }
         this._statusBar.clearStatus({useDefaults:true});
     },
     
     _onQueueEmpty : function(uploader){
-        this._uploadBtn.disable();
+        if( this._uploadBtn ){
+            this._uploadBtn.disable();
+        }
     },
     
     _onFileUploadProgress : function(fileUpload, info){
@@ -1157,7 +1216,7 @@ Ext.ux.uploader.AdapterFactory.reg('gears', Ext.ux.uploader.GearsAdapter);Ext.ux
         var pad = Ext.fly(el).child('.x-upload-panel-entry-pad');
         var progress = Ext.fly(el).child('.x-upload-panel-entry-progress');
         el.progress.setHeight(el.pad.getHeight());
-        el.progress.setWidth(el.pad.getWidth() * info.percent );
+        el.progress.setWidth( parseInt(100*info.percent)+'%' );
     },
     
     exposeMethods : function(object, methods){
@@ -1173,8 +1232,8 @@ Ext.ux.uploader.AdapterFactory.reg('gears', Ext.ux.uploader.GearsAdapter);Ext.ux
         }
     },
     
-    browse : function(){
-        this._uploader.browse();
+    getUploader : function(){
+        return this._uploader;
     }
     
 });
