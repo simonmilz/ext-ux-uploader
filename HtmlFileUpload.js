@@ -8,7 +8,7 @@ Ext.ux.uploader.HtmlFileUpload = Ext.extend( Ext.ux.uploader.AbstractFileUpload,
             'tag' : 'form'
         });
         var form = new Ext.form.BasicForm( formEl,{
-            fileUpload            :true,
+            fileUpload             :true,
             errorReader            :this.uploader.get('errorReader')
         });
         // move the input out of button and create a new one...        
@@ -29,9 +29,11 @@ Ext.ux.uploader.HtmlFileUpload = Ext.extend( Ext.ux.uploader.AbstractFileUpload,
     
     start : function(){
         this.input.dom.name=this.uploader.get('paramKeys').file;
+        var p = Ext.apply(this.uploader.extraParams||{});
+        p[this.uploader.get('paramKeys').filename]=this.getFilename();
         this.form.submit({
             url         :this.uploader.get('url'),
-            params      :this.uploader.extraParams || {},
+            params      :p,
             scope       :this,
             success     :this._onUploadSuccess,
             failure     :this._onUploadFailure

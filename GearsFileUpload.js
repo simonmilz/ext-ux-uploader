@@ -153,6 +153,11 @@ Ext.ux.uploader.GearsFileUpload = Ext.extend( Ext.ux.uploader.AbstractFileUpload
     },
     
     destroy : function(){
+        
+        if( this.isUploading() ){
+            this._request.abort();
+        }
+        
         if( this.canPreview() && this.uploader.usePreview ){
             var localServer = google.gears.factory.create('beta.localserver');
             var store = localServer.createStore('ux-uploader-gears-adapter');

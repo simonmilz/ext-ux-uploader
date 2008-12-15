@@ -28,15 +28,19 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
         if( !this._uploader ){
             throw "Uploader Adapter could not be found: "+this._adapterType;
         }
-        this._uploadBtn = new Ext.Button({
-            text             :'Upload',
-            handler            :this._uploader.upload,
-            scope            :this._uploader,
-            cls                :'x-btn-text-icon',
-            iconCls            :'upload-icon',
-            disabled        :true
-        });
-        this.tbar = [this._addFilesBtn, '-', this._uploadBtn];
+        
+        this.tbar = [this._addFilesBtn];
+        if(this.hideUploadBtn !== false ){
+            this._uploadBtn = new Ext.Button({
+                text                :'Upload',
+                handler             :this._uploader.upload,
+                scope               :this._uploader,
+                cls                 :'x-btn-text-icon',
+                iconCls             :'upload-icon',
+                disabled            :true
+            });
+            this.tbar+=[ '-', this._uploadBtn];
+        }
         
         this._statusBar = new Ext.StatusBar({
             defaultText : '',
@@ -81,7 +85,8 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
         this.exposeMethods(this._uploader,[
             'browse',
             'upload',
-            'reset'
+            'reset',
+            'isQueueEmpty'
         ]);
         this.relayEvents(this._uploader,[
             'queuecomplete',
@@ -89,7 +94,8 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
             'uploadstop',
             'queueempty',
             'filequeued',
-            'fileremoved'
+            'fileremoved',
+            'uploadsuccess'
         ]);
     },
     
@@ -107,7 +113,9 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
         var el = Ext.get(this.entryTpl.append(this.body,{name:name}));
         this._initEntry(el, fileUpload);
         fileUpload.setVar('panelEl', el);
-        this._uploadBtn.enable();
+        if( this._uploadBtn ){
+            this._uploadBtn.enable();
+        }
         this.doLayout();
     },
     
@@ -195,17 +203,25 @@ Ext.ux.uploader.Panel = Ext.extend( Ext.Panel, {
     },
     
     _onUploaderStart : function(uploader){
-        this._uploadBtn.disable();
+        if( this._uploadBtn ){
+            this._uploadBtn.disable();
+        }
         this._statusBar.showBusy();
     },
     
     _onUploaderStop : function(uploader){
-        if( !this._uploader.isQueueEmpty() ) this._uploadBtn.enable();
+        if( !this._uploader.isQueueEmpty() ){
+            if( this._uploadBtn ){
+                this._uploadBtn.enable();
+            }
+        }
         this._statusBar.clearStatus({useDefaults:true});
     },
     
     _onQueueEmpty : function(uploader){
-        this._uploadBtn.disable();
+        if( this._uploadBtn ){
+            this._uploadBtn.disable();
+        }
     },
     
     _onFileUploadProgress : function(fileUpload, info){
