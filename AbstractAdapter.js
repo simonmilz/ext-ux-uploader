@@ -2,8 +2,6 @@ Ext.namespace('Ext.ux.uploader');
 
 Ext.ux.uploader.AbstractAdapter = function(config){
     
-    Ext.ux.uploader.AbstractAdapter.superclass.constructor.call(this);
-    
     this._initialConfig = config;
     Ext.apply(this,config);
     this.addEvents({
@@ -32,7 +30,7 @@ Ext.ux.uploader.AbstractAdapter = function(config){
     if( this.imagesOnly ){
         this.filters = ['.jpg','.gif','.png','.bmp'];
     }
-    
+    Ext.ux.uploader.AbstractAdapter.superclass.constructor.call(this);
     this._init();
 };
 
