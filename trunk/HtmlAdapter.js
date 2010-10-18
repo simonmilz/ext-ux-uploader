@@ -5,7 +5,7 @@ Ext.ux.uploader.HtmlAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
         this._queue.on('remove', this._onFileUploadRemoved, this);
         
         this._uploading = false;
-        this._errorReader = this.decodeHtmlInResponse !== false ? false : this._ErrorReader();
+        this._errorReader = this.decodeHtmlInResponse === false ? false : this._ErrorReader();
         
         this._completed = new Ext.util.MixedCollection();
         
@@ -15,6 +15,8 @@ Ext.ux.uploader.HtmlAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
         }else{
             this._onButtonRender();
         }
+        this._btn.on('disable', this._onButtonDisable, this);
+        this._btn.on('enable', this._onButtonEnable, this);
         
         this._paramKeys = Ext.apply({
             'filename'    :'filename',
@@ -103,6 +105,18 @@ Ext.ux.uploader.HtmlAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
         return this._activeInput;
     },
     
+    _onButtonDisable : function(){
+        if( this._activeInput ){
+            this._activeInput.dom.disabled=true;
+        }
+    },
+    
+    _onButtonEnable : function(){
+        if( this._activeInput ){
+            this._activeInput.dom.disabled=false;
+        }
+    },
+    
     // private
     _onMouseDown : function(e){
         if(!this.disabled && e.button == 0){
@@ -156,8 +170,8 @@ Ext.ux.uploader.HtmlAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
         fileUpload.on('uploadfailure', this._onUploadFailure, this);
         
         this._queue.add(value, fileUpload );
-        this.fireEvent('filequeued', fileUpload );
         this._createActiveFileInput();
+        this.fireEvent('filequeued', fileUpload );
         
     },
     
@@ -170,7 +184,7 @@ Ext.ux.uploader.HtmlAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
                 requests++;
                 return true;
             }
-            if( fileUpload.isComplete() ){
+            if( fileUpload.isComplete() || fileUpload.isError() ){
                 return true;
             }
             fileUpload.start();
@@ -191,17 +205,21 @@ Ext.ux.uploader.HtmlAdapter = Ext.extend( Ext.ux.uploader.AbstractAdapter, {
         }
     },
     
-    _onUploadSuccess : function(fileUpload){
+    _onUploadSuccess : function(fileUpload, form, action){
         this._queue.remove(fileUpload);
-        this.fireEvent('uploadsuccess', this, fileUpload);
-        fileUpload.destroy();
+        this.fireEvent('uploadsuccess', this, fileUpload, form, action);
+        try{
+            fileUpload.destroy();
+        }catch(e){ /* this could have already been destroyed */ }
         this._upload();
     },
     
-    _onUploadFailure : function(fileUpload){
-        this.fireEvent('uploadfailure', this, fileUpload);
-        file.uploading=false;
-        //this._upload();
+    _onUploadFailure : function(fileUpload, form, action){
+        this.fireEvent('uploadfailure', this, fileUpload, form, action);
+        try{
+            fileUpload.uploading=false;
+        }catch(e){ /* this could have been destroyed */ }
+        this._upload();
     },
     
     upload : function(){

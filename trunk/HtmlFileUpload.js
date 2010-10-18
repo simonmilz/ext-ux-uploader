@@ -16,15 +16,16 @@ Ext.ux.uploader.HtmlFileUpload = Ext.extend( Ext.ux.uploader.AbstractFileUpload,
         this.input.appendTo( formEl );
     },
     
-    _onUploadSuccess : function(){
+    _onUploadSuccess : function(form, action){
         this._uploading = false;
         this._complete = true;
-        this.fireEvent('uploadsuccess', this);
+        this.fireEvent('uploadsuccess', this, form, action );
     },
     
-    _onUploadFailure : function(){
+    _onUploadFailure : function(form, action){
         this._uploading = false;
-        this.fireEvent('uploadfailure', this);
+        this._error = 'Error'; // need to be more specific
+        this.fireEvent('uploadfailure', this, form, action );
     },
     
     start : function(){
@@ -52,6 +53,10 @@ Ext.ux.uploader.HtmlFileUpload = Ext.extend( Ext.ux.uploader.AbstractFileUpload,
     
     isComplete : function(){
         return this._complete;
+    },
+    
+    isError : function(){
+        return this._error ? true : false;
     },
     
     getId : function(){
